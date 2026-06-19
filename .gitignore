@@ -1,0 +1,10 @@
+# 민감 정보가 하드코딩된 로컬 전용 스크립트
+get_kakao_token.py
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
