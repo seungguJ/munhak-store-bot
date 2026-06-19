@@ -1,6 +1,6 @@
 from main import format_message
 from collectors.munhak_events import Event
-from collectors.seven_eleven import HotItem
+from collectors.seven_eleven_official import OfficialProduct
 
 
 def test_format_message_contains_key_sections():
@@ -8,15 +8,16 @@ def test_format_message_contains_key_sections():
         Event("이번주 공연", "2026-06-20", "2026-06-21", "대중음악", "https://kopis.or.kr/x", "kopis"),
     ]
     hot_items = [
-        HotItem("허니버터 크림빵", 0.87, 4200, 87, "https://blog.naver.com/x", "적극 입고 (평소 2~3배)"),
+        OfficialProduct("허니버터크림빵", "파리)허니버터크림빵80g", "2+1", 1234.0),
     ]
     msg = format_message(this_week, [], hot_items)
 
     assert "문학경기장" in msg
     assert "이번주 공연" in msg
     assert "세븐일레븐" in msg
-    assert "허니버터 크림빵" in msg
-    assert "적극 입고" in msg
+    assert "허니버터크림빵" in msg
+    assert "2+1" in msg
+    assert "적극 발주" in msg  # 1위는 적극
 
 
 def test_format_message_empty_events():

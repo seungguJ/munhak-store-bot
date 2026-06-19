@@ -2,7 +2,7 @@ import os
 from datetime import date, timedelta
 
 from collectors.munhak_events import Event, collect_events, fetch_kopis
-from collectors.seven_eleven import HotItem, collect_hot_items
+from collectors.seven_eleven_official import collect_official_hot_items
 from notifier.kakao import refresh_access_token, send_message
 
 WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"]
@@ -25,17 +25,16 @@ def _date_label(start: str, end: str) -> str:
     return one(start)
 
 
-def _tier_emoji(recommendation: str) -> str:
-    if "적극" in recommendation:
-        return "🔴"
-    if "추가" in recommendation:
-        return "🟠"
-    if "소량" in recommendation:
-        return "🟡"
-    return "⚪"
+def _rank_tier(rank: int) -> tuple:
+    """순위별 (이모지, 발주 권고). 1~2위 적극, 3~4위 추가, 그 외 소량."""
+    if rank <= 2:
+        return "🔴", "적극 발주"
+    if rank <= 4:
+        return "🟠", "추가 발주"
+    return "🟡", "소량 테스트"
 
 
-def format_message(this_week: list, upcoming: list, hot_items: list) -> str:
+def format_message(this_week: list, upcoming: list, hot_items: list, signal: str = "blog") -> str:
     today = date.today()
     end = today + timedelta(days=6)
     lines = [
@@ -61,28 +60,28 @@ def format_message(this_week: list, upcoming: list, hot_items: list) -> str:
             if e.ticket_url:
                 lines.append(f"  {e.ticket_url}")
 
+    signal_label = "검색 트렌드" if signal == "datalab" else "블로그 화제도"
     lines += [
         "",
         "━━━━━━━━━━━━━━━━━",
-        "🏪 세븐일레븐 이번 주 핫템",
-        "(블로그·유튜브·트위터 화제순)",
+        "🏪 세븐일레븐 이번 주 발주 추천",
+        f"(공식 행사상품 × {signal_label})",
         "",
     ]
 
     if hot_items:
         for i, item in enumerate(hot_items, 1):
-            lines.append(f"{_tier_emoji(item.order_recommendation)} {i}. {item.product_name}")
-            lines.append(f"     발주: {item.order_recommendation}")
-            lines.append(f"     근거: 블로그 {item.blog_mentions}건 언급")
-            if item.source_url:
-                lines.append(f"     🔗 {item.source_url}")
+            emoji, rec = _rank_tier(i)
+            lines.append(f"{emoji} {i}. {item.name} [{item.promo_type} 행사]")
+            lines.append(f"     {signal_label} {i}위 · {rec}")
             lines.append("")
     else:
-        lines.append("이번 주 수집된 핫템 없음")
+        lines.append("이번 주 수집된 행사상품 없음")
 
     lines += [
         "━━━━━━━━━━━━━━━━━",
-        "발주 가이드: 🔴적극 🟠추가 🟡소량 ⚪관망",
+        "발주 가이드: 🔴적극 🟠추가 🟡소량",
+        "행사: 1+1·2+1은 마진 기회 — 회전 빠른 품목 우선",
     ]
 
     return "\n".join(lines).rstrip()
@@ -113,8 +112,6 @@ def main():
     kakao_refresh_token = os.environ["KAKAO_REFRESH_TOKEN"]
     naver_client_id = os.environ["NAVER_CLIENT_ID"]
     naver_client_secret = os.environ["NAVER_CLIENT_SECRET"]
-    youtube_api_key = os.environ["YOUTUBE_API_KEY"]
-    twitter_bearer = os.environ.get("X_BEARER_TOKEN", "")
     kopis_service_key = os.environ["KOPIS_SERVICE_KEY"]
 
     print("카카오 토큰 갱신 중...")
@@ -134,11 +131,11 @@ def main():
     upcoming = [e for e in all_events if date.fromisoformat(e.date) > week_end]
     print(f"  → 이번 주 {len(this_week)}개 / 다가오는 공연 {len(upcoming)}개")
 
-    print("세븐일레븐 핫템 분석 중...")
-    hot_items = collect_hot_items(naver_client_id, naver_client_secret, youtube_api_key, twitter_bearer)
-    print(f"  → {len(hot_items)}개 핫템 분석")
+    print("세븐일레븐 공식 행사상품 + 인기도 분석 중...")
+    hot_items, signal = collect_official_hot_items(naver_client_id, naver_client_secret, top_n=5)
+    print(f"  → {len(hot_items)}개 추천 (신호: {signal})")
 
-    message = format_message(this_week, upcoming, hot_items)
+    message = format_message(this_week, upcoming, hot_items, signal)
     print("\n--- 전송할 메시지 ---")
     print(message)
     print("-------------------\n")
