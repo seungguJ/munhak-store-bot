@@ -25,6 +25,16 @@ def _date_label(start: str, end: str) -> str:
     return one(start)
 
 
+def _tier_emoji(recommendation: str) -> str:
+    if "적극" in recommendation:
+        return "🔴"
+    if "추가" in recommendation:
+        return "🟠"
+    if "소량" in recommendation:
+        return "🟡"
+    return "⚪"
+
+
 def format_message(this_week: list, upcoming: list, hot_items: list) -> str:
     today = date.today()
     end = today + timedelta(days=6)
@@ -53,22 +63,29 @@ def format_message(this_week: list, upcoming: list, hot_items: list) -> str:
 
     lines += [
         "",
-        "━━━━━━━━━━━━━━━━━━",
-        "🏪 [세븐일레븐 이번 주 핫템]",
+        "━━━━━━━━━━━━━━━━━",
+        "🏪 세븐일레븐 이번 주 핫템",
+        "(블로그·유튜브·트위터 화제순)",
         "",
     ]
 
     if hot_items:
-        lines.append("🔥 SNS 화제 상품")
         for i, item in enumerate(hot_items, 1):
-            lines.append(f"{i}. {item.product_name} (블로그 {item.blog_mentions}건 | 인스타 {item.instagram_likes:,})")
-            lines.append(f"   → 발주 추천: {item.order_recommendation}")
+            lines.append(f"{_tier_emoji(item.order_recommendation)} {i}. {item.product_name}")
+            lines.append(f"     발주: {item.order_recommendation}")
+            lines.append(f"     근거: 블로그 {item.blog_mentions}건 언급")
             if item.source_url:
-                lines.append(f"   {item.source_url}")
+                lines.append(f"     🔗 {item.source_url}")
+            lines.append("")
     else:
         lines.append("이번 주 수집된 핫템 없음")
 
-    return "\n".join(lines)
+    lines += [
+        "━━━━━━━━━━━━━━━━━",
+        "발주 가이드: 🔴적극 🟠추가 🟡소량 ⚪관망",
+    ]
+
+    return "\n".join(lines).rstrip()
 
 
 def _update_github_secret(secret_name: str, value: str):

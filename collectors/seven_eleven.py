@@ -23,6 +23,38 @@ class HotItem:
     order_recommendation: str
 
 
+# 상품명 추출 시 일반명사/수식어만 남는 후보를 걸러내기 위한 토큰
+_CATEGORY = ["빵", "음료", "과자", "아이스크림", "도시락", "샌드위치", "떡볶이",
+             "김밥", "컵라면", "라면", "맥주", "소주", "콜라", "사이다", "젤리",
+             "커피", "우유", "간식", "디저트"]
+_MODIFIER = ["편의점", "세븐일레븐", "세븐", "신상품", "신상", "한정판", "요즘",
+             "인기", "추천", "역대급", "대박", "화제", "핫한", "최신", "이번주",
+             "신메뉴", "꿀조합", "솔직후기", "내돈내산"]
+
+
+def _is_generic(name: str) -> bool:
+    """수식어+카테고리만으로 이뤄진 일반명사(예: '편의점과자')면 True."""
+    core = name.replace(" ", "")
+    for w in _MODIFIER + _CATEGORY:
+        core = core.replace(w, "")
+    return len(core) < 2
+
+
+# 경쟁사 브랜드 (세븐일레븐 리포트이므로 제외)
+_COMPETITORS = ["CU", "씨유", "GS25", "지에스", "GS리테일", "이마트24", "미니스톱", "emart24"]
+
+# 상품명 추출: 문장 조각을 피하려고 공백 없는 2~10자 + 카테고리어만 인정
+_PRODUCT_PATTERN = (
+    r"[가-힣A-Za-z0-9]{2,10}"
+    r"(?:빵|음료|과자|아이스크림|도시락|샌드위치|떡볶이|김밥|컵라면|젤리|맥주|소주|콜라|사이다)"
+)
+
+
+def _is_competitor(name: str) -> bool:
+    upper = name.upper()
+    return any(c.upper() in upper for c in _COMPETITORS)
+
+
 def _recommendation(score: float) -> str:
     if score >= 0.8:
         return "적극 입고 (평소 2~3배)"
@@ -33,6 +65,8 @@ def _recommendation(score: float) -> str:
     return "관망"
 
 
+# 인스타 공식 API 폐지 + 크롤링 차단으로 인스타 신호는 제외.
+# 신뢰 가능한 신호(블로그/카페, 유튜브, 트위터)로만 점수 산정.
 def score_items(raw_items: list) -> list:
     if not raw_items:
         return []
@@ -41,7 +75,6 @@ def score_items(raw_items: list) -> list:
         vals = [r[key] for r in raw_items]
         return max(vals) or 1
 
-    max_ig = safe_max("instagram_likes")
     max_blog = safe_max("blog_mentions")
     max_yt = safe_max("youtube_views")
     max_tw = safe_max("tweet_count")
@@ -49,15 +82,14 @@ def score_items(raw_items: list) -> list:
     results = []
     for r in raw_items:
         score = (
-            0.40 * (r["instagram_likes"] / max_ig)
-            + 0.30 * (r["blog_mentions"] / max_blog)
-            + 0.20 * (r["youtube_views"] / max_yt)
-            + 0.10 * (r["tweet_count"] / max_tw)
+            0.55 * (r["blog_mentions"] / max_blog)
+            + 0.30 * (r["youtube_views"] / max_yt)
+            + 0.15 * (r["tweet_count"] / max_tw)
         )
         results.append(HotItem(
             product_name=r["name"],
             score=round(score, 3),
-            instagram_likes=r["instagram_likes"],
+            instagram_likes=r.get("instagram_likes", 0),
             blog_mentions=r["blog_mentions"],
             source_url=r.get("url", ""),
             order_recommendation=_recommendation(score),
@@ -85,10 +117,7 @@ def fetch_naver_blog(client_id: str, client_secret: str) -> list:
                 title = re.sub(r"<[^>]+>", "", item.get("title", "")).strip()
                 desc = re.sub(r"<[^>]+>", "", item.get("description", "")).strip()
                 combined = title + " " + desc
-                products = re.findall(
-                    r"[가-힣A-Za-z0-9\s]{3,15}(?:빵|음료|과자|아이스크림|도시락|샌드위치|떡볶이|김밥|컵라면|맥주|소주|콜라|사이다)",
-                    combined,
-                )
+                products = re.findall(_PRODUCT_PATTERN, combined)
                 for p in products:
                     p = p.strip()
                     if p:
@@ -156,10 +185,7 @@ def fetch_twitter(bearer_token: str) -> list:
         counts = {}
         for tw in tweets:
             text = tw.get("text", "")
-            products = re.findall(
-                r"[가-힣A-Za-z0-9\s]{3,15}(?:빵|음료|과자|아이스크림|도시락|샌드위치|떡볶이|김밥|컵라면|맥주|소주|콜라|사이다)",
-                text,
-            )
+            products = re.findall(_PRODUCT_PATTERN, text)
             for p in products:
                 p = p.strip()
                 if p:
@@ -191,7 +217,9 @@ def collect_hot_items(
 
     merged = {}
     for item in blog_items + yt_items + tw_items:
-        name = item["name"]
+        name = item["name"].strip()
+        if not name or _is_generic(name) or _is_competitor(name):
+            continue  # 일반명사("편의점과자")·경쟁사(CU 등) 제외
         if name not in merged:
             merged[name] = {"name": name, "instagram_likes": 0, "blog_mentions": 0, "youtube_views": 0, "tweet_count": 0, "url": item.get("url", "")}
         merged[name]["blog_mentions"] += item["blog_mentions"]
