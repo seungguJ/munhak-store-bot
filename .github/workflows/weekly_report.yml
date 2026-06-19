@@ -1,14 +1,18 @@
-name: Weekly Munhak Store Report
+name: Send Munhak Store Report
 
+# report.md 가 갱신되어 push되면 자동 전송 (Claude가 조사 후 push).
+# 수동으로도 실행 가능.
 on:
-  schedule:
-    - cron: '0 23 * * 0'   # 매주 일요일 23:00 UTC = 월요일 08:00 KST
-  workflow_dispatch:          # 수동 실행 가능
+  push:
+    branches: [master, main]
+    paths:
+      - 'report.md'
+  workflow_dispatch:
 
 jobs:
   send-report:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -21,21 +25,13 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install requests
 
-      - name: Run tests
-        run: pytest -v
-
-      - name: Send weekly report
+      - name: Send report to KakaoTalk
         env:
           KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
           KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
-          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
-          KOPIS_SERVICE_KEY: ${{ secrets.KOPIS_SERVICE_KEY }}
           GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python main.py
+        run: python send_report.py

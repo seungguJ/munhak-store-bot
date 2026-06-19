@@ -1,10 +1,22 @@
 # Munhak Store Bot
 
-인천 문학경기장 주변 편의점 운영을 위한 주간 자동 리포트 봇.
+인천 문학경기장 주변 편의점 운영을 위한 주간 리포트 봇.
 
-매주 월요일 08:00 KST에 카카오톡으로 다음 내용을 전송합니다:
-- 문학경기장 이번 주 공연/경기 일정 (인터파크, KBO, 네이버)
-- 세븐일레븐 SNS 화제 상품 Top 5 + 발주 추천
+## 동작 구조 (AI 큐레이션 방식)
+
+```
+사용자가 Claude에게 요청
+   → Claude가 공연 일정 + 세븐일레븐 핫템을 직접 조사 (웹/KOPIS/SNS)
+   → report.md 에 작성하고 git push
+   → GitHub Actions 가 report.md 를 카카오톡(나에게 보내기)으로 전송
+```
+
+데이터 수집·판단은 Claude가 직접 하고, GitHub Actions는 **report.md 전송만** 담당합니다.
+(과거의 자동 크롤링/API 방식은 핫템 정확도가 낮아 AI 직접 조사 방식으로 전환)
+
+- `report.md` — 전송될 리포트 본문 (Claude가 갱신)
+- `send_report.py` — report.md 를 읽어 카카오톡 전송 (CI 실행 대상)
+- `collectors/`, `main.py` — Claude가 조사 시 참고하는 보조 도구 (CI 미사용)
 
 ## 초기 설정
 
