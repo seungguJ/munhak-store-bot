@@ -14,14 +14,18 @@ GitHub → Settings → Secrets and variables → Actions → New repository sec
 
 | Secret 이름 | 발급처 | 비고 |
 |-------------|--------|------|
-| `KAKAO_CLIENT_ID` | [카카오 개발자](https://developers.kakao.com) → 내 애플리케이션 → REST API 키 | |
-| `KAKAO_CLIENT_SECRET` | 카카오 개발자 → 보안 → Client Secret | |
+| `KAKAO_CLIENT_ID` | [카카오 개발자](https://developers.kakao.com) → 앱 → 플랫폼 키 → REST API 키 | |
+| `KAKAO_CLIENT_SECRET` | 카카오 개발자 → 앱 → 플랫폼 키 → REST API 키 → 클라이언트 시크릿(카카오 로그인) | 활성화되어 있으면 필수 |
 | `KAKAO_REFRESH_TOKEN` | 아래 토큰 발급 절차 참고 | 초기 1회 수동 발급 필요 |
 | `NAVER_CLIENT_ID` | [네이버 개발자](https://developers.naver.com) → 검색 API 앱 등록 | 무료, 일 25,000건 |
 | `NAVER_CLIENT_SECRET` | 네이버 개발자 | |
 | `YOUTUBE_API_KEY` | [Google Cloud Console](https://console.cloud.google.com) → YouTube Data API v3 활성화 | 무료, 일 10,000 units |
+| `KOPIS_SERVICE_KEY` | [KOPIS](https://www.kopis.or.kr) → OPEN API → 인증키 발급신청 | 무료, 공연 일정 핵심 소스 |
 | `X_BEARER_TOKEN` | [Twitter Developer Portal](https://developer.twitter.com) → Bearer Token | 없으면 트위터 분석 자동 스킵 |
 | `GH_PAT` | GitHub → Settings → Developer settings → Personal access tokens (Classic) → `repo` 권한 | 카카오 토큰 자동 갱신용 |
+
+> 카카오 Redirect URI는 `앱 → 플랫폼 키 → REST API 키 → Redirect URI`에 `http://localhost:5000` 등록.
+> Refresh Token 발급은 `python get_kakao_token.py` (로컬 전용 스크립트)로 자동화.
 
 ### 2. 카카오 Refresh Token 최초 발급
 
@@ -75,7 +79,5 @@ pytest -v
 
 | 정보 | 소스 |
 |------|------|
-| 공연/콘서트 일정 | 인터파크 티켓 |
-| 야구 경기 일정 | KBO 공식 |
-| 이벤트 보완 | 네이버 뉴스 검색 |
+| 공연/행사 일정 (이번 주 + 다가오는 90일) | KOPIS 공연예술통합전산망 (시설명: 인천문학경기장) |
 | 편의점 트렌드 | 네이버 블로그/카페 + YouTube + Twitter(X) |
