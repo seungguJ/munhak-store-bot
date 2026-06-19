@@ -60,29 +60,29 @@ def parse_kopis_xml(xml_bytes: bytes) -> list:
 
 
 def fetch_kopis(service_key: str, days: int = 7) -> list:
-    """오늘~+days 기간의 인천문학경기장 공연을 KOPIS에서 수집."""
+    """오늘~+days 기간의 인천문학경기장 공연을 KOPIS에서 수집.
+
+    shprfnmfct(공연시설명)로 서버에서 '인천문학경기장'만 필터하므로
+    100건 제한 안에 충분히 들어온다.
+    """
     today = date.today()
     end = today + timedelta(days=days)
     events = []
     try:
-        for cpage in range(1, 6):  # 7일 범위라 몇 페이지면 충분
-            resp = requests.get(
-                KOPIS_URL,
-                params={
-                    "service": service_key,
-                    "stdate": today.strftime("%Y%m%d"),
-                    "eddate": end.strftime("%Y%m%d"),
-                    "cpage": cpage,
-                    "rows": 100,
-                },
-                timeout=10,
-            )
-            resp.raise_for_status()
-            page_events = parse_kopis_xml(resp.content)
-            db_count = len(ET.fromstring(resp.content).findall("db"))
-            events.extend(page_events)
-            if db_count < 100:
-                break
+        resp = requests.get(
+            KOPIS_URL,
+            params={
+                "service": service_key,
+                "stdate": today.strftime("%Y%m%d"),
+                "eddate": end.strftime("%Y%m%d"),
+                "cpage": 1,
+                "rows": 100,
+                "shprfnmfct": "인천문학경기장",  # 공연시설명 서버측 필터
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        events = parse_kopis_xml(resp.content)
     except Exception as e:
         print(f"[kopis] 수집 실패: {e}")
     return events
