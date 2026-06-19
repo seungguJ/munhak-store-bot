@@ -59,32 +59,45 @@ def parse_kopis_xml(xml_bytes: bytes) -> list:
     return events
 
 
-def fetch_kopis(service_key: str, days: int = 7) -> list:
+def _fetch_kopis_window(service_key: str, start: date, end: date, retries: int = 2) -> list:
+    """한 번의 KOPIS 조회 (KOPIS는 1회 최대 31일까지만 허용). 실패 시 재시도."""
+    last_err = None
+    for _ in range(retries + 1):
+        try:
+            resp = requests.get(
+                KOPIS_URL,
+                params={
+                    "service": service_key,
+                    "stdate": start.strftime("%Y%m%d"),
+                    "eddate": end.strftime("%Y%m%d"),
+                    "cpage": 1,
+                    "rows": 100,
+                    "shprfnmfct": "인천문학경기장",  # 공연시설명 서버측 필터
+                },
+                timeout=20,
+            )
+            resp.raise_for_status()
+            return parse_kopis_xml(resp.content)
+        except Exception as e:
+            last_err = e
+    print(f"[kopis] 구간 조회 실패 ({start}~{end}): {last_err}")
+    return []
+
+
+def fetch_kopis(service_key: str, days: int = 90) -> list:
     """오늘~+days 기간의 인천문학경기장 공연을 KOPIS에서 수집.
 
-    shprfnmfct(공연시설명)로 서버에서 '인천문학경기장'만 필터하므로
-    100건 제한 안에 충분히 들어온다.
+    KOPIS는 1회 조회 최대 31일이라 31일씩 나눠 조회 후 합친다.
+    한 구간이 실패해도 나머지 구간은 계속 수집한다.
     """
     today = date.today()
-    end = today + timedelta(days=days)
     events = []
-    try:
-        resp = requests.get(
-            KOPIS_URL,
-            params={
-                "service": service_key,
-                "stdate": today.strftime("%Y%m%d"),
-                "eddate": end.strftime("%Y%m%d"),
-                "cpage": 1,
-                "rows": 100,
-                "shprfnmfct": "인천문학경기장",  # 공연시설명 서버측 필터
-            },
-            timeout=10,
-        )
-        resp.raise_for_status()
-        events = parse_kopis_xml(resp.content)
-    except Exception as e:
-        print(f"[kopis] 수집 실패: {e}")
+    cursor = today
+    final = today + timedelta(days=days)
+    while cursor <= final:
+        window_end = min(cursor + timedelta(days=30), final)
+        events.extend(_fetch_kopis_window(service_key, cursor, window_end))
+        cursor = window_end + timedelta(days=1)
     return events
 
 
