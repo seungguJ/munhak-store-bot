@@ -1,54 +1,61 @@
-import pytest
-import responses
-from collectors.munhak_events import fetch_interpark, fetch_kbo, collect_events, Event
-from datetime import date
+from collectors.munhak_events import Event, parse_kopis_xml, collect_events
+from datetime import date, timedelta
 
 
-def test_event_dataclass():
-    event = Event(
-        title="IU 콘서트",
-        date="2026-06-19",
-        time="19:00",
-        genre="콘서트",
-        venue_capacity=20000,
-        ticket_url="https://tickets.interpark.com/test",
-        source="interpark",
+SAMPLE_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<dbs>
+  <db>
+    <mt20id>PF260001</mt20id>
+    <prfnm>플레이브 단독 콘서트</prfnm>
+    <prfpdfrom>{start}</prfpdfrom>
+    <prfpdto>{end}</prfpdto>
+    <fcltynm>인천문학경기장 주경기장</fcltynm>
+    <genrenm>대중음악</genrenm>
+  </db>
+  <db>
+    <mt20id>PF260099</mt20id>
+    <prfnm>딴 동네 뮤지컬</prfnm>
+    <prfpdfrom>{start}</prfpdfrom>
+    <prfpdto>{end}</prfpdto>
+    <fcltynm>서울예술의전당</fcltynm>
+    <genrenm>뮤지컬</genrenm>
+  </db>
+</dbs>"""
+
+
+def _dot(d):
+    return d.strftime("%Y.%m.%d")
+
+
+def test_parse_filters_to_munhak_venue_only():
+    today = date.today()
+    xml = SAMPLE_XML.format(start=_dot(today), end=_dot(today + timedelta(days=1))).encode("utf-8")
+    events = parse_kopis_xml(xml)
+    # 서울예술의전당은 걸러지고 문학경기장만 남는다
+    assert len(events) == 1
+    assert events[0].title == "플레이브 단독 콘서트"
+    assert events[0].genre == "대중음악"
+    assert events[0].source == "kopis"
+    assert "PF260001" in events[0].ticket_url
+
+
+def test_collect_filters_to_7_days():
+    today = date.today()
+    near = Event("이번주 공연", today.isoformat(), today.isoformat(), "대중음악", "u", "kopis")
+    far = Event(
+        "3개월 뒤 공연",
+        (today + timedelta(days=90)).isoformat(),
+        (today + timedelta(days=90)).isoformat(),
+        "대중음악", "u", "kopis",
     )
-    assert event.title == "IU 콘서트"
-    assert event.genre == "콘서트"
+    result = collect_events([near, far])
+    assert len(result) == 1
+    assert result[0].title == "이번주 공연"
 
 
-@responses.activate
-def test_fetch_interpark_returns_list():
-    html = """
-    <html><body>
-    <div class="RKBody">
-      <ul class="RKList">
-        <li>
-          <a href="/product/NewProduct.asp?NO=123456">
-            <strong class="RKName">테스트 콘서트</strong>
-          </a>
-          <span class="RKDate">2026.06.20 ~ 2026.06.21</span>
-          <span class="RKPlace">인천문학경기장</span>
-        </li>
-      </ul>
-    </div>
-    </body></html>
-    """
-    responses.add(
-        responses.GET,
-        "https://tickets.interpark.com/contents/Search?SearchWord=%EC%9D%B8%EC%B2%9C%EB%AC%B8%ED%95%99%EA%B2%BD%EA%B8%B0%EC%9E%A5",
-        body=html,
-        status=200,
-    )
-    result = fetch_interpark()
-    assert isinstance(result, list)
-
-
-def test_collect_events_deduplicates():
-    events = [
-        Event("IU 콘서트", "2026-06-19", "19:00", "콘서트", 20000, "https://a.com", "interpark"),
-        Event("IU 콘서트", "2026-06-19", "19:00", "콘서트", 20000, "https://b.com", "melon"),
-    ]
-    result = collect_events(events)
+def test_collect_deduplicates():
+    today = date.today().isoformat()
+    e1 = Event("같은 공연", today, today, "대중음악", "a", "kopis")
+    e2 = Event("같은 공연", today, today, "대중음악", "b", "kopis")
+    result = collect_events([e1, e2])
     assert len(result) == 1

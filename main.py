@@ -1,11 +1,28 @@
 import os
 from datetime import date, timedelta
 
-from collectors.munhak_events import Event, collect_events, fetch_interpark, fetch_kbo, fetch_naver_search
+from collectors.munhak_events import Event, collect_events, fetch_kopis
 from collectors.seven_eleven import HotItem, collect_hot_items
 from notifier.kakao import refresh_access_token, send_message
 
 WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"]
+
+
+def _date_label(start: str, end: str) -> str:
+    """'2026-06-20(토)' 또는 기간이면 '2026-06-20(토)~06-22(월)'."""
+    def one(iso):
+        try:
+            d = date.fromisoformat(iso)
+            return f"{iso}({WEEKDAYS[d.weekday()]})"
+        except ValueError:
+            return iso
+    if end and end != start:
+        try:
+            e = date.fromisoformat(end)
+            return f"{one(start)}~{e.strftime('%m-%d')}({WEEKDAYS[e.weekday()]})"
+        except ValueError:
+            return one(start)
+    return one(start)
 
 
 def format_message(events: list, hot_items: list) -> str:
@@ -16,38 +33,14 @@ def format_message(events: list, hot_items: list) -> str:
         "",
     ]
 
-    concerts = [e for e in events if e.genre != "스포츠"]
-    sports = [e for e in events if e.genre == "스포츠"]
-
-    if concerts:
+    if events:
         lines.append("🎤 공연/행사")
-        for e in concerts:
-            weekday = ""
-            try:
-                d = date.fromisoformat(e.date)
-                weekday = WEEKDAYS[d.weekday()]
-            except ValueError:
-                pass
-            cap = f"좌석 약 {e.venue_capacity:,}석 | " if e.venue_capacity else ""
-            date_str = f"{e.date}({weekday})" if weekday else e.date
-            lines.append(f"• {date_str} {e.title} - {e.time}")
-            lines.append(f"  {cap}{e.ticket_url}")
+        for e in events:
+            lines.append(f"• {_date_label(e.date, e.end_date)} [{e.genre}] {e.title}")
+            if e.ticket_url:
+                lines.append(f"  {e.ticket_url}")
     else:
         lines.append("🎤 공연/행사: 이번 주 예정된 이벤트 없음")
-
-    lines.append("")
-
-    if sports:
-        lines.append("⚾ SSG 랜더스 홈경기")
-        for e in sports:
-            weekday = ""
-            try:
-                d = date.fromisoformat(e.date)
-                weekday = WEEKDAYS[d.weekday()]
-            except ValueError:
-                pass
-            date_str = f"{e.date}({weekday})" if weekday else e.date
-            lines.append(f"• {date_str} {e.title} - {e.time}")
 
     lines += [
         "",
@@ -96,6 +89,7 @@ def main():
     naver_client_secret = os.environ["NAVER_CLIENT_SECRET"]
     youtube_api_key = os.environ["YOUTUBE_API_KEY"]
     twitter_bearer = os.environ.get("X_BEARER_TOKEN", "")
+    kopis_service_key = os.environ["KOPIS_SERVICE_KEY"]
 
     print("카카오 토큰 갱신 중...")
     token_data = refresh_access_token(kakao_client_id, kakao_client_secret, kakao_refresh_token)
@@ -105,14 +99,10 @@ def main():
     if new_refresh != kakao_refresh_token:
         _update_github_secret("KAKAO_REFRESH_TOKEN", new_refresh)
 
-    print("문학경기장 이벤트 수집 중...")
-    raw_events = (
-        fetch_interpark()
-        + fetch_kbo()
-        + fetch_naver_search(naver_client_id, naver_client_secret)
-    )
-    events = collect_events(raw_events)
-    print(f"  → {len(events)}개 이벤트 수집")
+    print("문학경기장 공연 일정 수집 중 (KOPIS)...")
+    raw_events = fetch_kopis(kopis_service_key, days=7)
+    events = collect_events(raw_events, days=7)
+    print(f"  → {len(events)}개 공연 수집 (7일 이내)")
 
     print("세븐일레븐 핫템 분석 중...")
     hot_items = collect_hot_items(naver_client_id, naver_client_secret, youtube_api_key, twitter_bearer)

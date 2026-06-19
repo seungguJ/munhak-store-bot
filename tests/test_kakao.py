@@ -1,7 +1,21 @@
 import pytest
 import responses
 import requests
-from notifier.kakao import refresh_access_token, send_message
+from notifier.kakao import refresh_access_token, send_message, split_text
+
+
+def test_split_text_short_stays_single():
+    chunks = split_text("짧은 메시지", max_len=1900)
+    assert chunks == ["짧은 메시지"]
+
+
+def test_split_text_long_splits_on_line_boundary():
+    text = "\n".join(f"line {i}" for i in range(1000))
+    chunks = split_text(text, max_len=100)
+    assert len(chunks) > 1
+    assert all(len(c) <= 100 for c in chunks)
+    # 합치면 원본과 동일(줄 순서 보존)
+    assert "\n".join(chunks).replace("\n", "") == text.replace("\n", "")
 
 
 @responses.activate
