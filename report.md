@@ -12,33 +12,33 @@
 
 ━━━━━━━━━━━━━━━━━
 🏪 세븐일레븐 이번 주 급상승 신상 (직접 조사)
-※ 세븐일레븐 제품 / 최근 1주일 내 글만 / 꾸준 인기 제외
-※ 유튜브 링크는 '이번 주 업로드' 필터 → 클릭해 급유행 확인
+※ 한국 세븐일레븐 제품 / 6월 3주차 신상 / 꾸준 인기 제외
+※ 유튜브 링크 클릭 → 최근 한국 리뷰 영상으로 검증
 
-🔴 1. 대만식 딸기샌드
-   대만 디저트 트렌드 타고 SNS 인증 급증
+🔴 1. 두쫀쿠 (두바이맛 쫀득쿠키)
+   유튜브·인스타 릴 후기 급증, 두바이초콜릿 트렌드
    → 디저트 매대 전면, 적극 확보
-   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EB%8C%80%EB%A7%8C%EC%8B%9D%20%EB%94%B8%EA%B8%B0%EC%83%8C%EB%93%9C&sp=EgIIAw%3D%3D
+   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EB%91%90%EC%AB%80%EC%BF%A0%20%EB%A6%AC%EB%B7%B0
 
-🔴 2. DOLL초면 (왕굴소스맛·칠리소스맛)
-   대만 인스턴트면 역수입 인기, 신상 화제
-   → 면류 코너 눈높이 진열
-   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20DOLL%EC%B4%88%EB%A9%B4&sp=EgIIAw%3D%3D
+🔴 2. 팔도 비락 수박식혜 (2,000원)
+   여름 한정 신상, 식혜+수박 조합으로 화제
+   → 여름 음료 냉장매대 전면
+   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EB%B9%84%EB%9D%BD%20%EC%88%98%EB%B0%95%EC%8B%9D%ED%98%9C
 
-🟠 3. 취사병 그럴싸한간장찜닭도시락 (5,500원)
-   밀리터리 콘셉트 콜라보로 신상 주목도↑
-   → 도시락 매대 추가 발주
-   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EA%B0%84%EC%9E%A5%EC%B0%9C%EB%8B%AD%EB%8F%84%EC%8B%9C%EB%9D%BD&sp=EgIIAw%3D%3D
+🟠 3. 매일 얼려먹는 피크닉 (복숭아·레몬)
+   스틱형 얼음과자 신상, 여름 수요
+   → 아이스 매대 추가 발주
+   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EC%96%BC%EB%A0%A4%EB%A8%B9%EB%8A%94%20%ED%94%BC%ED%81%AC%EB%8B%89
 
-🟠 4. 뽀득 통소세지김밥
-   6월 2주차 신상, 가성비 간편식으로 회전 기대
-   → 김밥 매대 보충
-   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%ED%86%B5%EC%86%8C%EC%84%B8%EC%A7%80%EA%B9%80%EB%B0%A5&sp=EgIIAw%3D%3D
+🟠 4. 설빙 컵설빙 (팥인절미·애플망고·오레오초코)
+   설빙 인기메뉴 컵디저트화, 신상 주목
+   → 냉동 디저트 보충
+   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EC%BB%B5%EC%84%A4%EB%B9%99
 
-🟡 5. 망고딸기맛 푸딩
-   여름 디저트 신상, 테스트 수요
-   → 소량 입고 후 반응 확인
-   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EB%A7%9D%EA%B3%A0%EB%94%B8%EA%B8%B0%20%ED%91%B8%EB%94%A9&sp=EgIIAw%3D%3D
+🟡 5. 유산슬탕면 (박은영 리뷰 화제)
+   신상 라면, 유튜브 리뷰로 노출 증가
+   → 면류 소량 테스트
+   🔗 유튜브 https://www.youtube.com/results?search_query=%EC%84%B8%EB%B8%90%EC%9D%BC%EB%A0%88%EB%B8%90%20%EC%9C%A0%EC%82%B0%EC%8A%AC%ED%83%95%EB%A9%B4%20%EB%B0%95%EC%9D%80%EC%98%81
 
 ━━━━━━━━━━━━━━━━━
 발주 가이드: 🔴적극 🟠추가 🟡소량
