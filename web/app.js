@@ -183,7 +183,7 @@ function renderEvent(id) {
     <a class="back" href="#">← 목록</a>
     <div class="hero" style="${gradeVars(g)}">
       <div class="hero-top">
-        <div class="hero-dday num">${cancelled ? "취소" : dday(e)}<small>${period(e)}${e.show_times && e.show_times.length ? "<br>" + e.show_times.join(", ") + " 시작" : ""}</small></div>
+        <div class="hero-dday num">${cancelled ? "취소" : dday(e)}<small>${period(e)}${e.show_times && e.show_times.length > 1 ? "<br>" + e.show_times.join(", ") + " 시작" : ""}</small></div>
         <span class="grade-chip"><b>${e.grade}</b>${GRADE_TEXT[e.grade]}</span>
       </div>
       <div class="hero-title">${esc(e.title)}</div>
