@@ -4,3 +4,4 @@ __pycache__/
 vapid_private.pem
 .env
 _site/
+docs/
