@@ -47,3 +47,10 @@ def test_past_event_marked_done(make_event, make_data):
 def test_unknown_venue_rejected(make_event, make_data):
     with pytest.raises(ValueError):
         finalize(make_data([raw(make_event, venue_id="nowhere")]), store.load_venues(), TODAY)
+
+
+def test_old_done_events_pruned(make_event, make_data):
+    events = [raw(make_event, id="kopis-OLD", start="2026-09-01", end="2026-09-01"),
+              raw(make_event, id="kopis-RECENT", start="2026-09-20", end="2026-09-20")]
+    out = finalize(make_data(events), store.load_venues(), TODAY)
+    assert [e["id"] for e in out["events"]] == ["kopis-RECENT"]

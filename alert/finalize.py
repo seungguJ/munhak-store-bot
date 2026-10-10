@@ -9,6 +9,7 @@ from alert import store
 from alert.grading import base_grade, crowd_per_day, final_grade
 
 KST = dt.timezone(dt.timedelta(hours=9))
+KEEP_DONE_DAYS = 30
 
 
 def finalize(data, venues, today):
@@ -22,6 +23,9 @@ def finalize(data, venues, today):
         e["grade"] = final_grade(base_grade(crowd["per_day"], venue["weight"]), e["grade_adjust"])
         if e["status"] == "scheduled" and dt.date.fromisoformat(e["end"]) < today:
             e["status"] = "done"
+    cutoff = today - dt.timedelta(days=KEEP_DONE_DAYS)
+    data["events"] = [e for e in data["events"]
+                      if not (e["status"] == "done" and dt.date.fromisoformat(e["end"]) < cutoff)]
     data["events"].sort(key=lambda e: (e["start"], e["id"]))
     store.validate(data)
     return data

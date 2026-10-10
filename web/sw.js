@@ -1,5 +1,5 @@
 "use strict";
-// 셸은 캐시 우선, data/*.json은 네트워크 우선(오프라인이면 마지막 캐시).
+// 셸은 stale-while-revalidate, data/*.json은 네트워크 우선(오프라인이면 마지막 캐시).
 const CACHE = "seonhak-v1";
 const SHELL = ["./", "index.html", "style.css", "app.js", "config.js", "manifest.json", "icon-192.png", "icon-512.png"];
 
@@ -30,7 +30,17 @@ self.addEventListener("fetch", (e) => {
     );
     return;
   }
-  e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request)));
+  // stale-while-revalidate: 즉시 캐시로 띄우고 뒤에서 새 버전 받아두기 (다음 실행 때 반영)
+  e.respondWith(
+    caches.open(CACHE).then((c) =>
+      c.match(e.request).then((hit) => {
+        const fresh = fetch(e.request)
+          .then((res) => { if (res.ok) c.put(e.request, res.clone()); return res; })
+          .catch(() => hit);
+        return hit || fresh;
+      })
+    )
+  );
 });
 
 self.addEventListener("push", (e) => {
