@@ -10,6 +10,16 @@
   <link rel="icon" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // 크롬 "데스크톱 사이트"가 켜지면 폰에서도 980px 폭으로 그려져 전부 작아진다 → 실제 폰 폭에 맞춰 확대
+    (function () {
+      var phone = Math.min(screen.width, screen.height);
+      var w = window.innerWidth;
+      if (navigator.maxTouchPoints > 0 && phone > 0 && phone < 600 && w > phone * 1.4) {
+        document.documentElement.style.zoom = (w / phone).toFixed(3);
+      }
+    })();
+  </script>
 </head>
 <body>
   <header class="top">

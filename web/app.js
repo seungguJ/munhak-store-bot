@@ -285,6 +285,14 @@ async function load() {
   }
 }
 
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+if ("serviceWorker" in navigator) {
+  // 새 버전 서비스워커가 자리 잡으면 한 번 새로고침해 최신 화면으로
+  let reloaded = false;
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (hadController && !reloaded) { reloaded = true; location.reload(); }
+  });
+  navigator.serviceWorker.register("sw.js").then((reg) => reg.update());
+}
 window.addEventListener("hashchange", () => DATA && route());
 load();
