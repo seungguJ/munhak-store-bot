@@ -1,0 +1,40 @@
+import json
+
+from alert import notify
+
+
+def write(tmp_path, name, data):
+    p = tmp_path / name
+    p.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    return str(p)
+
+
+def test_changes_dry_run_prints(tmp_path, monkeypatch, capsys, make_event, make_data):
+    monkeypatch.delenv("PUSH_SUBSCRIPTIONS", raising=False)
+    old = write(tmp_path, "old.json", make_data([]))
+    new = write(tmp_path, "new.json", make_data([make_event(start="2099-01-01", end="2099-01-01")]))
+    assert notify.main(["notify", "changes", old, new]) == 0
+    out = capsys.readouterr().out
+    assert "[dry-run]" in out and "🆕 [S] 테스트 콘서트" in out
+
+
+def test_missing_old_file_treated_as_empty(tmp_path, monkeypatch, capsys, make_event, make_data):
+    monkeypatch.delenv("PUSH_SUBSCRIPTIONS", raising=False)
+    new = write(tmp_path, "new.json", make_data([make_event(start="2099-01-01", end="2099-01-01")]))
+    assert notify.main(["notify", "changes", str(tmp_path / "nope.json"), new]) == 0
+    assert "🆕" in capsys.readouterr().out
+
+
+def test_expired_subscription_exit_code(tmp_path, monkeypatch, make_event, make_data):
+    monkeypatch.setenv("PUSH_SUBSCRIPTIONS", json.dumps([{"endpoint": "https://gone", "keys": {}}]))
+    monkeypatch.setenv("VAPID_PRIVATE_KEY", "KEY")
+    monkeypatch.setenv("VAPID_SUBJECT", "mailto:a@b.c")
+    monkeypatch.setattr(notify, "send_all", lambda *a: ["https://gone"])
+    new = write(tmp_path, "new.json", make_data([make_event(start="2099-01-01", end="2099-01-01")]))
+    assert notify.main(["notify", "changes", str(tmp_path / "nope.json"), new]) == 2
+
+
+def test_stale_exit_code(tmp_path, make_data):
+    data = make_data([])
+    data["updated_at"] = "2000-01-01T00:00:00+09:00"
+    assert notify.main(["notify", "stale", write(tmp_path, "e.json", data)]) == 3
