@@ -1,0 +1,29 @@
+name: Notify Changes
+
+# 루틴이 data/events.json을 push하면 이전 버전과 비교해 새 행사/등급 상승/취소를 푸시.
+on:
+  push:
+    branches: [main]
+    paths: ['data/events.json']
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Previous events.json
+        run: git show "${{ github.event.before }}:data/events.json" > /tmp/old.json 2>/dev/null || echo '{"events":[]}' > /tmp/old.json
+      - name: Push alerts
+        env:
+          PUSH_SUBSCRIPTIONS: ${{ secrets.PUSH_SUBSCRIPTIONS }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+        run: python -m alert.notify changes /tmp/old.json data/events.json

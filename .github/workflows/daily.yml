@@ -1,0 +1,52 @@
+name: Daily Reminders
+
+# 매일 08:00 KST: D-7/D-1 리마인드 푸시 (Claude 없이 동작) + 루틴 정지 감지.
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'reminders 또는 test(설치 확인용 테스트 알림)'
+        default: reminders
+        type: choice
+        options: [reminders, test]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PUSH_SUBSCRIPTIONS: ${{ secrets.PUSH_SUBSCRIPTIONS }}
+      VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+      VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Push reminders
+        run: python -m alert.notify ${{ inputs.mode || 'reminders' }}
+      - name: Routine health check
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          code=0; python -m alert.notify stale || code=$?
+          if [ "$code" = "3" ]; then
+            open=$(gh issue list --label routine-stale --state open --json number --jq length)
+            if [ "$open" = "0" ]; then
+              gh label create routine-stale --color B60205 --force
+              gh issue create --label routine-stale \
+                --title "루틴이 36시간 넘게 events.json을 갱신하지 않음" \
+                --body "Claude Code 루틴 실행 기록을 확인하세요. 기존 행사의 D-7/D-1 알림은 계속 나갑니다."
+            fi
+          elif [ "$code" != "0" ]; then
+            exit "$code"
+          fi
