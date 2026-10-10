@@ -34,6 +34,13 @@ function dday(e) {
 function crowd(n) {
   return n >= 10000 ? `${(n / 10000).toFixed(1)}만` : n.toLocaleString("ko-KR");
 }
+function fmtUpdated(d) {
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  const mins = Math.round((Date.now() - d) / 60000);
+  const ago = mins < 60 ? `${Math.max(mins, 0)}분 전` : mins < 1440 ? `${Math.round(mins / 60)}시간 전` : `${Math.round(mins / 1440)}일 전`;
+  return `${d.getMonth() + 1}월 ${d.getDate()}일 ${hh}:${mm} (${ago})`;
+}
 function gradeVar(g) {
   return `--g: var(--${g})`;
 }
@@ -65,7 +72,7 @@ function renderHome() {
   const cancelled = list.filter((e) => e.status === "cancelled");
   const updated = new Date(DATA.updated_at);
   app.innerHTML = `
-    <p class="muted small">마지막 조사: ${updated.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "numeric", minute: "2-digit" })}</p>
+    <p class="muted small">${DATA.events.length || DATA.updated_at.indexOf("T00:00:00") < 0 ? `마지막 조사: ${fmtUpdated(updated)}` : "아직 첫 조사 전이에요"}</p>
     ${big.length ? `<h2>발주 준비가 필요한 행사</h2>${big.map(card).join("")}`
                  : `<p class="pad">다가오는 큰 행사가 없어요. 새 행사가 잡히면 알림으로 알려드릴게요.</p>`}
     ${small.length ? `<h2>소규모 행사 (알림 없음)</h2>${small.map(card).join("")}` : ""}
