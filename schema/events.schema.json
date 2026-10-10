@@ -1,19 +1,35 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["updated_at", "events", "venue_suggestions"],
+  "required": [
+    "updated_at",
+    "events",
+    "venue_suggestions"
+  ],
   "additionalProperties": false,
   "properties": {
-    "updated_at": { "type": "string", "format": "date-time" },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "venue_suggestions": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "reason"],
+        "required": [
+          "name",
+          "reason"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "reason": { "type": "string" },
-          "source": { "type": "string" }
+          "name": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
         }
       }
     },
@@ -23,54 +39,145 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "id", "title", "category", "venue_id", "start", "end", "status",
-          "popularity", "crowd_estimate", "grade_adjust", "grade",
-          "peak_hours", "order_advice", "sources", "first_seen", "last_changed"
+          "id",
+          "title",
+          "category",
+          "venue_id",
+          "start",
+          "end",
+          "status",
+          "popularity",
+          "crowd_estimate",
+          "grade_adjust",
+          "grade",
+          "peak_hours",
+          "sources",
+          "first_seen",
+          "last_changed"
         ],
         "properties": {
-          "id": { "type": "string", "pattern": "^(kopis|web)-[A-Za-z0-9_-]+$" },
-          "title": { "type": "string", "minLength": 1 },
-          "category": { "enum": ["concert", "festival", "sports", "broadcast", "exhibition", "other"] },
-          "venue_id": { "type": "string" },
-          "start": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
-          "end": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
-          "show_times": { "type": "array", "items": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" } },
-          "status": { "enum": ["scheduled", "cancelled", "done"] },
+          "id": {
+            "type": "string",
+            "pattern": "^(kopis|web)-[A-Za-z0-9_-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "enum": [
+              "concert",
+              "festival",
+              "sports",
+              "broadcast",
+              "exhibition",
+              "other"
+            ]
+          },
+          "venue_id": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "show_times": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^\\d{2}:\\d{2}$"
+            }
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "cancelled",
+              "done"
+            ]
+          },
           "popularity": {
             "type": "object",
-            "required": ["sold_out", "extra_shows", "evidence"],
+            "required": [
+              "sold_out",
+              "extra_shows",
+              "evidence"
+            ],
             "properties": {
-              "sold_out": { "type": "boolean" },
-              "extra_shows": { "type": "boolean" },
-              "evidence": { "type": "array", "items": { "type": "string" } }
+              "sold_out": {
+                "type": "boolean"
+              },
+              "extra_shows": {
+                "type": "boolean"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           },
           "crowd_estimate": {
             "type": "object",
-            "required": ["fill_rate", "per_day"],
+            "required": [
+              "fill_rate",
+              "per_day"
+            ],
             "properties": {
-              "fill_rate": { "type": "number", "minimum": 0, "maximum": 1.2 },
-              "capacity_override": { "type": "integer", "minimum": 1 },
-              "per_day": { "type": "integer", "minimum": 0 }
-            }
-          },
-          "grade_adjust": { "enum": [-1, 0, 1] },
-          "grade": { "enum": ["S", "A", "B", "C"] },
-          "peak_hours": { "type": "array", "items": { "type": "string" } },
-          "order_advice": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["item", "multiplier"],
-              "properties": {
-                "item": { "type": "string" },
-                "multiplier": { "type": "number", "minimum": 1 }
+              "fill_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1.2
+              },
+              "capacity_override": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "per_day": {
+                "type": "integer",
+                "minimum": 0
               }
             }
           },
-          "sources": { "type": "array", "items": { "type": "string" } },
-          "first_seen": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
-          "last_changed": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+          "grade_adjust": {
+            "enum": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "grade": {
+            "enum": [
+              "S",
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "peak_hours": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "first_seen": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "last_changed": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
         }
       }
     }

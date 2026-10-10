@@ -63,9 +63,7 @@ def reminder_alerts(events, venues, today):
             continue
         days = (dt.date.fromisoformat(e["start"]) - today).days
         if days == 7:
-            advice = ", ".join("%s ×%g" % (a["item"], a["multiplier"]) for a in e["order_advice"])
-            alerts.append(_alert(e, "📦 D-7 [%s] %s" % (e["grade"], e["title"]),
-                                 "발주 준비: %s · %s" % (advice or "음료·간식 보강", _summary(e, venues))))
+            alerts.append(_alert(e, "📅 D-7 [%s] %s" % (e["grade"], e["title"]), _summary(e, venues)))
         elif days == 1:
             peak = " / ".join(e["peak_hours"])
             alerts.append(_alert(e, "⏰ 내일 [%s] %s" % (e["grade"], e["title"]),

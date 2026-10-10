@@ -57,8 +57,8 @@ def test_reminders_d7_and_d1(make_event):
     ]
     alerts = reminder_alerts(events, V, TODAY)
     assert [a["url"] for a in alerts] == ["./#event=kopis-A", "./#event=kopis-B"]
-    assert alerts[0]["title"].startswith("📦 D-7")
-    assert "생수 ×3" in alerts[0]["body"]
+    assert alerts[0]["title"].startswith("📅 D-7")
+    assert "발주" not in alerts[0]["body"]
     assert alerts[1]["title"].startswith("⏰ 내일")
 
 

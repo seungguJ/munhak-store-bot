@@ -16,7 +16,6 @@ BASE_EVENT = {
     "grade_adjust": 0,
     "grade": "S",
     "peak_hours": ["16:00-18:00 입장 전"],
-    "order_advice": [{"item": "생수", "multiplier": 3}],
     "sources": ["https://example.com"],
     "first_seen": "2026-10-01",
     "last_changed": "2026-10-01",

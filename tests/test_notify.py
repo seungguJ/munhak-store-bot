@@ -63,5 +63,5 @@ def test_today_override_and_demo_url(tmp_path, monkeypatch, capsys):
     sent = []
     monkeypatch.setattr(notify, "_print_alert", lambda a: sent.append(a))
     assert notify.main(["notify", "reminders", path]) == 0
-    assert sent[0]["title"].startswith("📦 D-7 [S] 제14회 연수 능허대")
+    assert sent[0]["title"].startswith("📅 D-7 [S] 제14회 연수 능허대")
     assert sent[0]["url"] == "./?demo=rescene&today=2026-10-02#event=web-neungheodae-2026"

@@ -31,20 +31,6 @@
         "17:00-19:00 공연 전 자리잡기",
         "21:00-21:30 불꽃 후 귀가"
       ],
-      "order_advice": [
-        {
-          "item": "생수",
-          "multiplier": 3
-        },
-        {
-          "item": "맥주",
-          "multiplier": 2
-        },
-        {
-          "item": "얼음컵",
-          "multiplier": 2
-        }
-      ],
       "sources": [
         "https://www.incheontoday.com/news/articleView.html?idxno=323632"
       ],

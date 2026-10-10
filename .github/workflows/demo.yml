@@ -1,7 +1,7 @@
 name: Demo Push
 
 # 실제 데이터(data/events.json)와 무관하게, 데모 데이터로 "그날 받았을 알림"을 실제 폰에 보낸다.
-# 예: demo=rescene, today=2026-10-02 → 🆕 새 행사 + 📦 D-7 발주 알림
+# 예: demo=rescene, today=2026-10-02 → 🆕 새 행사 + 📅 D-7 알림
 on:
   workflow_dispatch:
     inputs:

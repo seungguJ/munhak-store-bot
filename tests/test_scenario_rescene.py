@@ -57,8 +57,8 @@ def test_reminders_d7_and_d1():
     events = routine_output(dt.date(2026, 9, 21))["events"]
     d7 = reminder_alerts(events, VENUES, dt.date(2026, 10, 2))
     d1 = reminder_alerts(events, VENUES, dt.date(2026, 10, 8))
-    assert [a["title"][:6] for a in d7] == ["📦 D-7 "]
-    assert "생수 ×3" in d7[0]["body"]
+    assert [a["title"][:6] for a in d7] == ["📅 D-7 "]
+    assert "연수한마음공원" in d7[0]["body"]
     assert [a["title"][:4] for a in d1] == ["⏰ 내일"]
     assert "17:00-19:00" in d1[0]["body"]
     assert reminder_alerts(events, VENUES, dt.date(2026, 10, 5)) == []

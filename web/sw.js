@@ -1,6 +1,6 @@
 "use strict";
 // 셸은 stale-while-revalidate, data/*.json은 네트워크 우선(오프라인이면 마지막 캐시).
-const CACHE = "seonhak-v6";
+const CACHE = "seonhak-v7";
 const SHELL = ["./", "index.html", "style.css", "app.js", "config.js", "manifest.json", "icon-192.png", "icon-512.png", "badge-96.png"];
 
 self.addEventListener("install", (e) => {

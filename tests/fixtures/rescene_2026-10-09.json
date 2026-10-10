@@ -9,7 +9,9 @@
       "venue_id": "yeonsu-hanmaum",
       "start": "2026-10-09",
       "end": "2026-10-10",
-      "show_times": ["19:00"],
+      "show_times": [
+        "19:00"
+      ],
       "status": "scheduled",
       "popularity": {
         "sold_out": false,
@@ -19,15 +21,18 @@
           "인천투데이 9/15: 10/9 19:00~20:30 리센느·에일리·신인선 축하공연, 이후 드론쇼·불꽃"
         ]
       },
-      "crowd_estimate": { "fill_rate": 1.0, "capacity_override": 40000 },
+      "crowd_estimate": {
+        "fill_rate": 1.0,
+        "capacity_override": 40000
+      },
       "grade_adjust": 0,
-      "peak_hours": ["17:00-19:00 공연 전 자리잡기", "21:00-21:30 불꽃 후 귀가"],
-      "order_advice": [
-        { "item": "생수", "multiplier": 3 },
-        { "item": "맥주", "multiplier": 2 },
-        { "item": "얼음컵", "multiplier": 2 }
+      "peak_hours": [
+        "17:00-19:00 공연 전 자리잡기",
+        "21:00-21:30 불꽃 후 귀가"
       ],
-      "sources": ["https://www.incheontoday.com/news/articleView.html?idxno=323632"],
+      "sources": [
+        "https://www.incheontoday.com/news/articleView.html?idxno=323632"
+      ],
       "first_seen": "2026-09-21",
       "last_changed": "2026-09-21"
     }

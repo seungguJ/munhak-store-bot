@@ -18,6 +18,11 @@ def test_missing_field_fails(make_event, make_data):
         store.validate(make_data([e]))
 
 
+def test_order_advice_no_longer_allowed(make_event, make_data):
+    with pytest.raises(store.ValidationError):
+        store.validate(make_data([make_event(order_advice=[{"item": "생수", "multiplier": 3}])]))
+
+
 def test_bad_grade_fails(make_event, make_data):
     with pytest.raises(store.ValidationError):
         store.validate(make_data([make_event(grade="SS")]))

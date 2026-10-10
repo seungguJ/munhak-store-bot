@@ -78,10 +78,18 @@ function firstRun() {
 }
 
 /* ── 홈 ── */
+function secondFact(e) {
+  const p = e.popularity;
+  const tags = [p.sold_out ? "매진" : "", p.extra_shows ? "추가 회차" : ""].filter(Boolean);
+  if (tags.length) return `<div class="fact"><span>예매 상황</span><strong>${tags.join(" · ")}</strong></div>`;
+  if (e.show_times && e.show_times.length) return `<div class="fact"><span>시작 시각</span><strong class="num">${e.show_times[0]}</strong></div>`;
+  const days = Math.round((parseDate(e.end) - parseDate(e.start)) / 86400000) + 1;
+  return `<div class="fact"><span>기간</span><strong class="num">${days}<em>일</em></strong></div>`;
+}
+
 function heroCard(e) {
   const v = venueOf(e);
   const [cv, cu] = crowdParts(e.crowd_estimate.per_day);
-  const top = e.order_advice[0];
   const days = daysUntil(e);
   return `
     <a class="hero" style="${gradeVars(e.grade)}" href="#event=${encodeURIComponent(e.id)}">
@@ -93,9 +101,9 @@ function heroCard(e) {
       <div class="hero-meta">${esc(v.name)} · 선학역 ${v.distance_km}km</div>
       <div class="facts">
         <div class="fact"><span>하루 예상 인파</span><strong class="num">${cv}<em>${cu}</em></strong></div>
-        <div class="fact"><span>${top ? "발주 1순위" : "기간"}</span><strong>${top ? `${esc(top.item.split("·")[0])} <em>×${top.multiplier}</em>` : `${e.start === e.end ? 1 : Math.round((parseDate(e.end) - parseDate(e.start)) / 86400000) + 1}<em>일</em>`}</strong></div>
+        ${secondFact(e)}
       </div>
-      <div class="hero-cta"><span>${e.order_advice.length ? "발주 추천 · 혼잡 시간 보기" : "자세히 보기"}</span><span aria-hidden="true">→</span></div>
+      <div class="hero-cta"><span>${e.peak_hours.length ? "혼잡 시간 · 장소 보기" : "자세히 보기"}</span><span aria-hidden="true">→</span></div>
     </a>`;
 }
 
@@ -170,7 +178,6 @@ function renderEvent(id) {
   const p = e.popularity;
   const [cv, cu] = crowdParts(e.crowd_estimate.per_day);
   const cancelled = e.status === "cancelled";
-  const tags = [p.sold_out ? "매진" : "", p.extra_shows ? "추가 회차" : ""].filter(Boolean);
   const g = cancelled ? "C" : e.grade;
   app.innerHTML = `
     <a class="back" href="#">← 목록</a>
@@ -182,15 +189,9 @@ function renderEvent(id) {
       <div class="hero-title">${esc(e.title)}</div>
       <div class="facts">
         <div class="fact"><span>하루 예상 인파</span><strong class="num">${cv}<em>${cu}</em></strong></div>
-        ${tags.length ? `<div class="fact"><span>예매 상황</span><strong>${tags.join(" · ")}</strong></div>`
-          : e.show_times && e.show_times.length ? `<div class="fact"><span>시작 시각</span><strong class="num">${e.show_times[0]}</strong></div>`
-          : `<div class="fact"><span>기간</span><strong class="num">${Math.round((parseDate(e.end) - parseDate(e.start)) / 86400000) + 1}<em>일</em></strong></div>`}
+        ${secondFact(e)}
       </div>
     </div>
-
-    ${e.order_advice.length ? `<div class="section" style="${gradeVars(g)}"><h3>발주 추천 · 평소 대비</h3>
-      <div class="orders">${e.order_advice.map((a) => `<div class="order"><span>${esc(a.item)}</span><b class="num">×${a.multiplier}</b></div>`).join("")}</div>
-    </div>` : ""}
 
     ${e.peak_hours.length ? `<div class="section"><h3>손님 몰리는 시간</h3><div class="peaks">${e.peak_hours.map(peakRow).join("")}</div></div>` : ""}
 
