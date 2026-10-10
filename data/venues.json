@@ -1,0 +1,88 @@
+{
+  "origin": { "name": "선학역 (인천1호선)", "note": "거리는 선학역 기준 대략값" },
+  "venues": [
+    {
+      "id": "seonhak-gym",
+      "name": "선학체육관",
+      "kopis_keywords": ["선학체육관"],
+      "distance_km": 0.4,
+      "zone": "near",
+      "weight": 1.0,
+      "capacity": 4000,
+      "capacity_verified": false
+    },
+    {
+      "id": "seonhak-ice",
+      "name": "선학국제빙상경기장",
+      "kopis_keywords": ["선학국제빙상", "선학빙상"],
+      "distance_km": 0.5,
+      "zone": "near",
+      "weight": 1.0,
+      "capacity": 1500,
+      "capacity_verified": false
+    },
+    {
+      "id": "seonhak-hockey",
+      "name": "선학하키경기장",
+      "kopis_keywords": ["선학하키"],
+      "distance_km": 0.5,
+      "zone": "near",
+      "weight": 1.0,
+      "capacity": 1500,
+      "capacity_verified": false
+    },
+    {
+      "id": "landers-field",
+      "name": "SSG랜더스필드",
+      "kopis_keywords": ["랜더스필드", "문학야구장"],
+      "distance_km": 1.6,
+      "zone": "near",
+      "weight": 1.0,
+      "capacity": 23000,
+      "capacity_verified": false,
+      "note": "KBO 정규리그 경기는 제외"
+    },
+    {
+      "id": "munhak-main",
+      "name": "인천문학경기장 주경기장",
+      "kopis_keywords": ["문학경기장"],
+      "distance_km": 1.5,
+      "zone": "near",
+      "weight": 1.0,
+      "capacity": 49000,
+      "capacity_verified": false
+    },
+    {
+      "id": "munhak-pool",
+      "name": "문학박태환수영장",
+      "kopis_keywords": ["박태환수영장"],
+      "distance_km": 1.4,
+      "zone": "near",
+      "weight": 0.8,
+      "capacity": 3000,
+      "capacity_verified": false
+    },
+    {
+      "id": "incheon-arts",
+      "name": "인천문화예술회관",
+      "kopis_keywords": ["인천문화예술회관"],
+      "distance_km": 2.5,
+      "zone": "far",
+      "weight": 0.5,
+      "capacity": 1500,
+      "capacity_verified": false,
+      "note": "대공연장 기준. 소공연장 공연은 capacity_override 사용"
+    },
+    {
+      "id": "aetteul",
+      "name": "인천시청 애뜰광장",
+      "kopis_keywords": ["애뜰광장"],
+      "distance_km": 3.0,
+      "zone": "far",
+      "weight": 0.5,
+      "capacity": 3000,
+      "capacity_verified": false,
+      "note": "야외 광장. 행사별 capacity_override 권장"
+    }
+  ]
+}
