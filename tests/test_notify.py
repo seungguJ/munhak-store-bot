@@ -38,3 +38,11 @@ def test_stale_exit_code(tmp_path, make_data):
     data = make_data([])
     data["updated_at"] = "2000-01-01T00:00:00+09:00"
     assert notify.main(["notify", "stale", write(tmp_path, "e.json", data)]) == 3
+
+
+def test_suggestions_exit_code_and_body(tmp_path, capsys, make_data):
+    data = make_data([])
+    assert notify.main(["notify", "suggestions", write(tmp_path, "a.json", data)]) == 0
+    data["venue_suggestions"] = [{"name": "송도달빛축제공원", "reason": "구 축제 개최지", "source": "https://x"}]
+    assert notify.main(["notify", "suggestions", write(tmp_path, "b.json", data)]) == 4
+    assert "- **송도달빛축제공원**: 구 축제 개최지 https://x" in capsys.readouterr().out

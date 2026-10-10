@@ -1,10 +1,29 @@
 {
-  "origin": { "name": "선학역 (인천1호선)", "note": "거리는 선학역 기준 대략값" },
+  "origin": {
+    "name": "선학역 (인천1호선)",
+    "note": "거리는 선학역 기준 대략값"
+  },
   "venues": [
+    {
+      "id": "yeonsu-hanmaum",
+      "name": "연수한마음공원",
+      "kopis_keywords": [
+        "연수한마음공원",
+        "한마음공원"
+      ],
+      "distance_km": 0.8,
+      "zone": "near",
+      "weight": 1.0,
+      "capacity": 20000,
+      "capacity_verified": false,
+      "note": "선학동 231-3, 2025년 10월 조성. 야외 공원이라 구 축제(능허대 문화축제 등)는 capacity_override 사용"
+    },
     {
       "id": "seonhak-gym",
       "name": "선학체육관",
-      "kopis_keywords": ["선학체육관"],
+      "kopis_keywords": [
+        "선학체육관"
+      ],
       "distance_km": 0.4,
       "zone": "near",
       "weight": 1.0,
@@ -14,7 +33,10 @@
     {
       "id": "seonhak-ice",
       "name": "선학국제빙상경기장",
-      "kopis_keywords": ["선학국제빙상", "선학빙상"],
+      "kopis_keywords": [
+        "선학국제빙상",
+        "선학빙상"
+      ],
       "distance_km": 0.5,
       "zone": "near",
       "weight": 1.0,
@@ -24,7 +46,9 @@
     {
       "id": "seonhak-hockey",
       "name": "선학하키경기장",
-      "kopis_keywords": ["선학하키"],
+      "kopis_keywords": [
+        "선학하키"
+      ],
       "distance_km": 0.5,
       "zone": "near",
       "weight": 1.0,
@@ -34,7 +58,10 @@
     {
       "id": "landers-field",
       "name": "SSG랜더스필드",
-      "kopis_keywords": ["랜더스필드", "문학야구장"],
+      "kopis_keywords": [
+        "랜더스필드",
+        "문학야구장"
+      ],
       "distance_km": 1.6,
       "zone": "near",
       "weight": 1.0,
@@ -45,7 +72,9 @@
     {
       "id": "munhak-main",
       "name": "인천문학경기장 주경기장",
-      "kopis_keywords": ["문학경기장"],
+      "kopis_keywords": [
+        "문학경기장"
+      ],
       "distance_km": 1.5,
       "zone": "near",
       "weight": 1.0,
@@ -55,7 +84,9 @@
     {
       "id": "munhak-pool",
       "name": "문학박태환수영장",
-      "kopis_keywords": ["박태환수영장"],
+      "kopis_keywords": [
+        "박태환수영장"
+      ],
       "distance_km": 1.4,
       "zone": "near",
       "weight": 0.8,
@@ -65,7 +96,9 @@
     {
       "id": "incheon-arts",
       "name": "인천문화예술회관",
-      "kopis_keywords": ["인천문화예술회관"],
+      "kopis_keywords": [
+        "인천문화예술회관"
+      ],
       "distance_km": 2.5,
       "zone": "far",
       "weight": 0.5,
@@ -76,7 +109,9 @@
     {
       "id": "aetteul",
       "name": "인천시청 애뜰광장",
-      "kopis_keywords": ["애뜰광장"],
+      "kopis_keywords": [
+        "애뜰광장"
+      ],
       "distance_km": 3.0,
       "zone": "far",
       "weight": 0.5,

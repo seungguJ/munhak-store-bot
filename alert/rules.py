@@ -73,6 +73,6 @@ def reminder_alerts(events, venues, today):
     return alerts
 
 
-def is_stale(data, now, hours=36):
+def is_stale(data, now, hours=8 * 24):  # 주 1회 루틴 + 하루 여유
     updated = dt.datetime.fromisoformat(data["updated_at"])
     return now - updated > dt.timedelta(hours=hours)

@@ -44,9 +44,22 @@ jobs:
             if [ "$open" = "0" ]; then
               gh label create routine-stale --color B60205 --force
               gh issue create --label routine-stale \
-                --title "루틴이 36시간 넘게 events.json을 갱신하지 않음" \
+                --title "주간 루틴이 8일 넘게 events.json을 갱신하지 않음" \
                 --body "Claude Code 루틴 실행 기록을 확인하세요. 기존 행사의 D-7/D-1 알림은 계속 나갑니다."
             fi
           elif [ "$code" != "0" ]; then
             exit "$code"
+          fi
+      - name: Venue suggestions
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m alert.notify suggestions > /tmp/suggestions.md || code=$?
+          if [ "${code:-0}" = "4" ]; then
+            open=$(gh issue list --label venue-suggestion --state open --json number --jq length)
+            if [ "$open" = "0" ]; then
+              gh label create venue-suggestion --color 0E8A16 --force
+              gh issue create --label venue-suggestion --title "행사장 목록 밖 행사 후보" --body-file /tmp/suggestions.md
+            fi
           fi

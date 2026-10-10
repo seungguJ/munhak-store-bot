@@ -108,19 +108,13 @@ function legend() {
     `<div style="${gradeVars(g)}"><b>${g}</b><span>${GRADE_TEXT[g]}<br>${GRADE_RANGE[g]}</span></div>`).join("")}</div>`;
 }
 
-function venueList() {
-  const vs = Object.values(VENUES).sort((a, b) => a.distance_km - b.distance_km);
-  return `<div class="list"><ul class="venues">${vs.map((v) =>
-    `<li>${esc(v.name)}<span class="num">${v.distance_km}km</span></li>`).join("")}</ul></div>`;
-}
-
 function renderHome() {
   const list = DATA.events.filter(upcoming).sort((a, b) => a.start.localeCompare(b.start));
   const live = list.filter((e) => e.status !== "cancelled");
   const big = live.filter((e) => e.grade !== "C");
   const small = live.filter((e) => e.grade === "C");
   const cancelled = list.filter((e) => e.status === "cancelled");
-  const status = firstRun() ? "첫 조사를 기다리는 중 · 매일 아침 6:30 조사" : fmtUpdated(new Date(DATA.updated_at));
+  const status = firstRun() ? "첫 조사를 기다리는 중 · 매주 월요일 아침 조사" : fmtUpdated(new Date(DATA.updated_at));
 
   if (!big.length) {
     app.innerHTML = `
@@ -131,8 +125,6 @@ function renderHome() {
       </div>
       ${small.length ? `<div class="eyebrow">소규모 행사<small>알림 없음</small></div><div class="list">${small.map(listItem).join("")}</div>` : ""}
       ${cancelled.length ? `<div class="eyebrow">취소된 행사</div><div class="list">${cancelled.map(listItem).join("")}</div>` : ""}
-      <div class="eyebrow">지켜보는 행사장<small>선학역 기준</small></div>
-      ${venueList()}
       <div class="eyebrow">등급 기준<small>하루 예상 인파</small></div>
       ${legend()}`;
     return;

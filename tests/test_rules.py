@@ -63,7 +63,7 @@ def test_reminders_d7_and_d1(make_event):
 
 
 def test_is_stale():
-    data = {"updated_at": "2026-10-08T06:30:00+09:00"}
+    data = {"updated_at": "2026-10-05T06:30:00+09:00"}
     kst = dt.timezone(dt.timedelta(hours=9))
-    assert is_stale(data, dt.datetime(2026, 10, 9, 18, 0, tzinfo=kst)) is False
-    assert is_stale(data, dt.datetime(2026, 10, 9, 19, 0, tzinfo=kst)) is True
+    assert is_stale(data, dt.datetime(2026, 10, 13, 6, 0, tzinfo=kst)) is False
+    assert is_stale(data, dt.datetime(2026, 10, 13, 7, 0, tzinfo=kst)) is True

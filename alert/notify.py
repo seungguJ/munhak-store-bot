@@ -3,6 +3,7 @@
     python -m alert.notify changes OLD.json NEW.json   # events.json push 시
     python -m alert.notify reminders [events.json]     # 매일 D-7 / D-1
     python -m alert.notify stale [events.json]         # 루틴 정지 감지 (exit 3)
+    python -m alert.notify suggestions [events.json]   # 목록 밖 행사장 후보 (있으면 exit 4)
     python -m alert.notify test                        # 설치 확인용 테스트 알림
 
 환경변수: PUSH_SUBSCRIPTIONS(JSON 배열), VAPID_PRIVATE_KEY, VAPID_SUBJECT(mailto:...)
@@ -60,6 +61,14 @@ def main(argv):
             return 3
         print("정상: 마지막 갱신 %s" % data["updated_at"])
         return 0
+    if cmd == "suggestions":
+        items = store.load_json(path)["venue_suggestions"]
+        if not items:
+            return 0
+        print("루틴이 data/venues.json에 없는 장소의 행사를 발견했습니다. 추가할지 검토하세요.\n")
+        for v in items:
+            print("- **%s**: %s %s" % (v["name"], v["reason"], v.get("source", "")))
+        return 4
     if cmd == "test":
         return deliver([{"title": "✅ 알림 테스트", "body": "선학역 행사 알림이 정상 연결됐어요.", "url": "./"}])
     print(__doc__)
