@@ -29,5 +29,6 @@ secret("VAPID_SUBJECT", "https://%s.github.io/%s/" % (owner.lower(), name))
 
 config = Path(__file__).resolve().parent.parent / "web" / "config.js"
 text = re.sub(r'VAPID_PUBLIC_KEY: "[^"]*"', 'VAPID_PUBLIC_KEY: "%s"' % public, config.read_text(encoding="utf-8"))
-config.write_text(text, encoding="utf-8", newline="\n")
+with open(config, "w", encoding="utf-8", newline="\n") as f:
+    f.write(text)
 print("완료: Secret 2개 등록, web/config.js 공개키 갱신")
