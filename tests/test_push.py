@@ -35,3 +35,9 @@ def test_send_all_reraises_other_errors(monkeypatch):
     except push.WebPushException:
         return
     raise AssertionError("expected WebPushException")
+
+
+def test_subject_https_url_reduced_to_origin():
+    assert push.normalize_subject("https://seungguj.github.io/munhak-store-bot/") == "https://seungguj.github.io"
+    assert push.normalize_subject("mailto:a@b.c") == "mailto:a@b.c"
+    assert push.normalize_subject(" https://x.example.com ") == "https://x.example.com"

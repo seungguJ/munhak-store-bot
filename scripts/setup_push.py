@@ -25,7 +25,7 @@ def secret(key, value):
 
 
 secret("VAPID_PRIVATE_KEY", private)
-secret("VAPID_SUBJECT", "https://%s.github.io/%s/" % (owner.lower(), name))
+secret("VAPID_SUBJECT", "https://%s.github.io" % owner.lower())
 
 config = Path(__file__).resolve().parent.parent / "web" / "config.js"
 text = re.sub(r'VAPID_PUBLIC_KEY: "[^"]*"', 'VAPID_PUBLIC_KEY: "%s"' % public, config.read_text(encoding="utf-8"))
