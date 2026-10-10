@@ -73,7 +73,7 @@ python -m alert.finalize data/events.json   # 인파·등급 계산 + 스키마 
 pytest -q
 git add data/events.json
 git commit -m "data: 행사 갱신 $(TZ=Asia/Seoul date +%F) — 신규 N / 변경 M"
-git push origin main
+git push origin master
 ```
 
 - finalize나 pytest가 실패한 상태로 push하지 않는다

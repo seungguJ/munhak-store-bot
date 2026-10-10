@@ -3,7 +3,7 @@ name: Notify Changes
 # 루틴이 data/events.json을 push하면 이전 버전과 비교해 새 행사/등급 상승/취소를 푸시.
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths: ['data/events.json']
 
 jobs:
