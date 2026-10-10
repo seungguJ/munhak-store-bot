@@ -1,6 +1,6 @@
 "use strict";
 // 셸은 stale-while-revalidate, data/*.json은 네트워크 우선(오프라인이면 마지막 캐시).
-const CACHE = "seonhak-v4";
+const CACHE = "seonhak-v5";
 const SHELL = ["./", "index.html", "style.css", "app.js", "config.js", "manifest.json", "icon-192.png", "icon-512.png", "badge-96.png"];
 
 self.addEventListener("install", (e) => {
@@ -18,7 +18,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
-  if (url.pathname.includes("/data/")) {
+  if (url.pathname.includes("/data/") || url.pathname.includes("/demo/")) {
     e.respondWith(
       fetch(e.request)
         .then((res) => {

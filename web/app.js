@@ -7,6 +7,17 @@ const GRADE_RANGE = { S: "3만+", A: "1만+", B: "3천+", C: "그 외" };
 let DATA = null;
 let VENUES = {};
 
+// 데모: ?demo=rescene&today=2026-10-02 → web/demo/rescene.json 을 그 날짜 기준으로 표시
+const PARAMS = new URLSearchParams(location.search);
+const DEMO = /^[a-z0-9-]+$/.test(PARAMS.get("demo") || "") ? PARAMS.get("demo") : null;
+const DEMO_TODAY = DEMO && /^\d{4}-\d{2}-\d{2}$/.test(PARAMS.get("today") || "") ? PARAMS.get("today") : null;
+function nowMs() {
+  if (!DEMO_TODAY) return Date.now();
+  const n = new Date();
+  const [y, m, d] = DEMO_TODAY.split("-").map(Number);
+  return new Date(y, m - 1, d, n.getHours(), n.getMinutes()).getTime();
+}
+
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -16,7 +27,7 @@ function parseDate(iso) {
   return new Date(y, m - 1, d);
 }
 function today() {
-  const n = new Date();
+  const n = new Date(nowMs());
   return new Date(n.getFullYear(), n.getMonth(), n.getDate());
 }
 function fmtDate(iso) {
@@ -49,7 +60,7 @@ function crowdText(n) {
 function fmtUpdated(d) {
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
-  const mins = Math.round((Date.now() - d) / 60000);
+  const mins = Math.round((nowMs() - d) / 60000);
   const ago = mins < 1 ? "방금" : mins < 60 ? `${mins}분 전` : mins < 1440 ? `${Math.round(mins / 60)}시간 전` : `${Math.round(mins / 1440)}일 전`;
   return `${d.getMonth() + 1}/${d.getDate()} ${hh}:${mm} 조사 · ${ago}`;
 }
@@ -171,7 +182,9 @@ function renderEvent(id) {
       <div class="hero-title">${esc(e.title)}</div>
       <div class="facts">
         <div class="fact"><span>하루 예상 인파</span><strong class="num">${cv}<em>${cu}</em></strong></div>
-        <div class="fact"><span>예매 상황</span><strong>${tags.length ? tags.join(" · ") : "판매 중"}</strong></div>
+        ${tags.length ? `<div class="fact"><span>예매 상황</span><strong>${tags.join(" · ")}</strong></div>`
+          : e.show_times && e.show_times.length ? `<div class="fact"><span>시작 시각</span><strong class="num">${e.show_times[0]}</strong></div>`
+          : `<div class="fact"><span>기간</span><strong class="num">${Math.round((parseDate(e.end) - parseDate(e.start)) / 86400000) + 1}<em>일</em></strong></div>`}
       </div>
     </div>
 
@@ -255,18 +268,25 @@ async function renderSettings() {
   };
 }
 
+function demoBanner() {
+  if (!DEMO) return "";
+  const t = DEMO_TODAY ? fmtDate(DEMO_TODAY) : "실제 날짜";
+  return `<div class="demo-banner">데모 화면 · 오늘을 <b>${t}</b>로 가정 <a href="./">실제 화면 →</a></div>`;
+}
+
 function route() {
   const h = location.hash;
   if (h.startsWith("#event=")) renderEvent(decodeURIComponent(h.slice(7)));
   else if (h === "#settings") renderSettings();
   else renderHome();
+  app.insertAdjacentHTML("afterbegin", demoBanner());
   window.scrollTo(0, 0);
 }
 
 async function load() {
   try {
     const [ev, vn] = await Promise.all([
-      fetch("data/events.json", { cache: "no-store" }).then((r) => r.json()),
+      fetch(DEMO ? `demo/${DEMO}.json` : "data/events.json", { cache: "no-store" }).then((r) => r.json()),
       fetch("data/venues.json").then((r) => r.json()),
     ]);
     DATA = ev;

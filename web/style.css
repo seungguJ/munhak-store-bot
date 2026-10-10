@@ -172,3 +172,10 @@ h1.page { font-size: 26px; letter-spacing: -0.02em; margin: 4px 4px 0; }
 .skeleton.short { height: 84px; }
 @keyframes pulse { to { opacity: .55; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+
+.demo-banner {
+  margin: 8px 0 4px; padding: 10px 14px; border-radius: 14px;
+  background: color-mix(in srgb, var(--B) 18%, var(--surface)); color: var(--text);
+  font-size: 15px; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center;
+}
+.demo-banner a { margin-left: auto; font-weight: 700; color: var(--accent); }

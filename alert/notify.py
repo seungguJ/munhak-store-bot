@@ -7,6 +7,7 @@
     python -m alert.notify test                        # 설치 확인용 테스트 알림
 
 환경변수: PUSH_SUBSCRIPTIONS(JSON 배열), VAPID_PRIVATE_KEY, VAPID_SUBJECT(mailto:...)
+데모용:   TODAY=YYYY-MM-DD (오늘 날짜 가정), DEMO_QUERY=demo=...&today=... (알림 링크를 데모 화면으로)
 구독이 없으면 보낼 내용만 출력한다(dry-run). 만료 구독이 있으면 exit 2.
 """
 import datetime as dt
@@ -26,9 +27,24 @@ def _load(path):
     return store.load_json(path) if os.path.exists(path) else EMPTY
 
 
+def _print_alert(a):
+    print("· %s | %s | %s" % (a["title"], a["body"], a["url"]))
+
+
+def _now():
+    now = dt.datetime.now(KST)
+    if os.environ.get("TODAY"):
+        d = dt.date.fromisoformat(os.environ["TODAY"])
+        now = now.replace(year=d.year, month=d.month, day=d.day)
+    return now
+
+
 def deliver(alerts):
+    query = os.environ.get("DEMO_QUERY")
+    if query:
+        alerts = [dict(a, url="./?%s%s" % (query, a["url"][2:])) for a in alerts]
     for a in alerts:
-        print("· %s | %s" % (a["title"], a["body"]))
+        _print_alert(a)
     if not alerts:
         print("보낼 알림 없음")
         return 0
@@ -47,7 +63,7 @@ def deliver(alerts):
 
 def main(argv):
     cmd = argv[1] if len(argv) > 1 else ""
-    now = dt.datetime.now(KST)
+    now = _now()
     venues = store.load_venues()
     if cmd == "changes":
         return deliver(change_alerts(_load(argv[2]), store.load_json(argv[3]), venues, now.date()))

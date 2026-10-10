@@ -1,0 +1,41 @@
+name: Demo Push
+
+# 실제 데이터(data/events.json)와 무관하게, 데모 데이터로 "그날 받았을 알림"을 실제 폰에 보낸다.
+# 예: demo=rescene, today=2026-10-02 → 🆕 새 행사 + 📦 D-7 발주 알림
+on:
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: 'web/demo/<이름>.json'
+        default: rescene
+      today:
+        description: '오늘로 가정할 날짜 (YYYY-MM-DD)'
+        default: '2026-10-02'
+      new_event:
+        description: '"새 행사 발견" 알림도 보내기'
+        type: boolean
+        default: true
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PUSH_SUBSCRIPTIONS: ${{ secrets.PUSH_SUBSCRIPTIONS }}
+      VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+      VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+      TODAY: ${{ inputs.today }}
+      DEMO_QUERY: demo=${{ inputs.demo }}&today=${{ inputs.today }}
+      DEMO_FILE: web/demo/${{ inputs.demo }}.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: New event alert
+        if: inputs.new_event
+        run: python -m alert.notify changes /nonexistent.json "$DEMO_FILE"
+      - name: Date reminders (D-7 / D-1)
+        run: python -m alert.notify reminders "$DEMO_FILE"

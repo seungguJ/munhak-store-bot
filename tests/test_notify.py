@@ -46,3 +46,22 @@ def test_suggestions_exit_code_and_body(tmp_path, capsys, make_data):
     data["venue_suggestions"] = [{"name": "송도달빛축제공원", "reason": "구 축제 개최지", "source": "https://x"}]
     assert notify.main(["notify", "suggestions", write(tmp_path, "b.json", data)]) == 4
     assert "- **송도달빛축제공원**: 구 축제 개최지 https://x" in capsys.readouterr().out
+
+
+def test_today_override_and_demo_url(tmp_path, monkeypatch, capsys):
+    """데모: TODAY=2026-10-02 → 리센느 축제 D-7, 링크는 데모 화면으로."""
+    from pathlib import Path
+    from alert import store
+    from alert.finalize import finalize
+    import datetime as dt
+    fixture = Path(__file__).parent / "fixtures" / "rescene_2026-10-09.json"
+    data = finalize(store.load_json(fixture), store.load_venues(), dt.date(2026, 9, 21))
+    path = write(tmp_path, "demo.json", data)
+    monkeypatch.delenv("PUSH_SUBSCRIPTIONS", raising=False)
+    monkeypatch.setenv("TODAY", "2026-10-02")
+    monkeypatch.setenv("DEMO_QUERY", "demo=rescene&today=2026-10-02")
+    sent = []
+    monkeypatch.setattr(notify, "_print_alert", lambda a: sent.append(a))
+    assert notify.main(["notify", "reminders", path]) == 0
+    assert sent[0]["title"].startswith("📦 D-7 [S] 제14회 연수 능허대")
+    assert sent[0]["url"] == "./?demo=rescene&today=2026-10-02#event=web-neungheodae-2026"
