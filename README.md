@@ -47,11 +47,9 @@ Settings → Pages → Source: **GitHub Actions**
 
 ### 2. 웹푸시 키
 ```bash
-python scripts/gen_vapid.py
+python scripts/setup_push.py
 ```
-- `PUBLIC` → `web/config.js`의 `VAPID_PUBLIC_KEY`
-- `PRIVATE` → Secret `VAPID_PRIVATE_KEY`
-- Secret `VAPID_SUBJECT` = `mailto:<이메일>`
+Secret `VAPID_PRIVATE_KEY`·`VAPID_SUBJECT`를 등록하고 `web/config.js`에 공개키를 넣습니다. 이후 `web/config.js`를 commit/push.
 
 ### 3. 알림 받을 휴대폰 (안드로이드 크롬)
 1. Pages 주소 열기 → 메뉴 → **홈 화면에 추가**
