@@ -37,7 +37,7 @@ def deliver(alerts):
         return 0
     expired = send_all(alerts, subs, os.environ["VAPID_PRIVATE_KEY"], os.environ["VAPID_SUBJECT"])
     if expired:
-        print("::warning::만료된 구독 %d개 — 사장님 폰에서 알림을 다시 켜고 Secret 갱신 필요: %s"
+        print("::warning::만료된 구독 %d개 — 휴대폰에서 알림을 다시 켜고 Secret 갱신 필요: %s"
               % (len(expired), expired))
         return 2
     print("전송 완료: 알림 %d건 × 구독 %d개" % (len(alerts), len(subs)))
