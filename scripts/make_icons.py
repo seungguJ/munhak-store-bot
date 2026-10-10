@@ -14,4 +14,13 @@ for size in (192, 512):
     d.rectangle([(180 * s, 302 * s), (230 * s, 372 * s)], fill="white")
     d.ellipse([(330 * s, 120 * s), (400 * s, 190 * s)], fill="#f5a623")
     img.save(WEB / ("icon-%d.png" % size))
+# 안드로이드 상태바용 배지: 투명 배경 + 흰 실루엣 (컬러 아이콘은 흰 네모로 보임)
+b = 96
+img = Image.new("RGBA", (b, b), (0, 0, 0, 0))
+d = ImageDraw.Draw(img)
+s = b / 512
+d.polygon([(110 * s, 200 * s), (230 * s, 200 * s), (380 * s, 110 * s),
+           (380 * s, 402 * s), (230 * s, 312 * s), (110 * s, 312 * s)], fill="white")
+d.rectangle([(150 * s, 312 * s), (210 * s, 400 * s)], fill="white")
+img.save(WEB / "badge-96.png")
 print("ok")

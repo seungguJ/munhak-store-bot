@@ -3,6 +3,7 @@
 const app = document.getElementById("app");
 const WEEKDAYS = "일월화수목금토";
 const GRADE_TEXT = { S: "초대형", A: "대형", B: "중형", C: "소형" };
+const GRADE_RANGE = { S: "3만+", A: "1만+", B: "3천+", C: "그 외" };
 let DATA = null;
 let VENUES = {};
 
@@ -20,48 +21,97 @@ function today() {
 }
 function fmtDate(iso) {
   const d = parseDate(iso);
-  return `${d.getMonth() + 1}/${d.getDate()}(${WEEKDAYS[d.getDay()]})`;
+  return `${d.getMonth() + 1}월 ${d.getDate()}일 (${WEEKDAYS[d.getDay()]})`;
 }
 function period(e) {
-  return e.start === e.end ? fmtDate(e.start) : `${fmtDate(e.start)} ~ ${fmtDate(e.end)}`;
+  if (e.start === e.end) return fmtDate(e.start);
+  const s = parseDate(e.start), t = parseDate(e.end);
+  const end = s.getMonth() === t.getMonth() ? `${t.getDate()}일 (${WEEKDAYS[t.getDay()]})` : fmtDate(e.end);
+  return `${fmtDate(e.start)} ~ ${end}`;
+}
+function daysUntil(e) {
+  return Math.round((parseDate(e.start) - today()) / 86400000);
 }
 function dday(e) {
-  const days = Math.round((parseDate(e.start) - today()) / 86400000);
-  if (days > 0) return `D-${days}`;
-  if (days === 0) return "오늘";
+  const n = daysUntil(e);
+  if (n > 0) return `D-${n}`;
+  if (n === 0) return "오늘";
   return "진행 중";
 }
-function crowd(n) {
-  return n >= 10000 ? `${(n / 10000).toFixed(1)}만` : n.toLocaleString("ko-KR");
+function crowdParts(n) {
+  if (n >= 10000) return [(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, ""), "만 명"];
+  return [n.toLocaleString("ko-KR"), "명"];
+}
+function crowdText(n) {
+  const [v, u] = crowdParts(n);
+  return v + u;
 }
 function fmtUpdated(d) {
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
   const mins = Math.round((Date.now() - d) / 60000);
-  const ago = mins < 60 ? `${Math.max(mins, 0)}분 전` : mins < 1440 ? `${Math.round(mins / 60)}시간 전` : `${Math.round(mins / 1440)}일 전`;
-  return `${d.getMonth() + 1}월 ${d.getDate()}일 ${hh}:${mm} (${ago})`;
+  const ago = mins < 1 ? "방금" : mins < 60 ? `${mins}분 전` : mins < 1440 ? `${Math.round(mins / 60)}시간 전` : `${Math.round(mins / 1440)}일 전`;
+  return `${d.getMonth() + 1}/${d.getDate()} ${hh}:${mm} 조사 · ${ago}`;
 }
-function gradeVar(g) {
-  return `--g: var(--${g})`;
+function gradeVars(g) {
+  return `--g: var(--${g}); --g-soft: var(--${g}-soft)`;
+}
+function venueOf(e) {
+  return VENUES[e.venue_id] || { name: e.venue_id, distance_km: "?" };
 }
 function upcoming(e) {
   return e.status !== "done" && parseDate(e.end) >= today();
 }
+function firstRun() {
+  return !DATA.events.length && DATA.updated_at.indexOf("T00:00:00") >= 0;
+}
 
-function card(e) {
-  const v = VENUES[e.venue_id] || { name: e.venue_id, distance_km: "?" };
+/* ── 홈 ── */
+function heroCard(e) {
+  const v = venueOf(e);
+  const [cv, cu] = crowdParts(e.crowd_estimate.per_day);
+  const top = e.order_advice[0];
+  const days = daysUntil(e);
+  return `
+    <a class="hero" style="${gradeVars(e.grade)}" href="#event=${encodeURIComponent(e.id)}">
+      <div class="hero-top">
+        <div class="hero-dday num">${dday(e)}<small>${days > 0 ? fmtDate(e.start) : period(e)}</small></div>
+        <span class="grade-chip"><b>${e.grade}</b>${GRADE_TEXT[e.grade]}</span>
+      </div>
+      <div class="hero-title">${esc(e.title)}</div>
+      <div class="hero-meta">${esc(v.name)} · 선학역 ${v.distance_km}km</div>
+      <div class="facts">
+        <div class="fact"><span>하루 예상 인파</span><strong class="num">${cv}<em>${cu}</em></strong></div>
+        <div class="fact"><span>${top ? "발주 1순위" : "기간"}</span><strong>${top ? `${esc(top.item.split("·")[0])} <em>×${top.multiplier}</em>` : `${e.start === e.end ? 1 : Math.round((parseDate(e.end) - parseDate(e.start)) / 86400000) + 1}<em>일</em>`}</strong></div>
+      </div>
+      <div class="hero-cta"><span>${e.order_advice.length ? "발주 추천 · 혼잡 시간 보기" : "자세히 보기"}</span><span aria-hidden="true">→</span></div>
+    </a>`;
+}
+
+function listItem(e) {
+  const v = venueOf(e);
+  const d = parseDate(e.start);
   const cancelled = e.status === "cancelled";
   return `
-    <a class="card ${cancelled ? "cancelled" : ""}" style="${gradeVar(e.grade)}" href="#event=${encodeURIComponent(e.id)}">
-      <div class="row">
-        <span class="badge">${e.grade}</span>
-        <span class="dday">${cancelled ? "취소됨" : dday(e)}</span>
-        <span class="meta">${period(e)}</span>
+    <a class="item ${cancelled ? "cancelled" : ""}" style="${gradeVars(cancelled ? "C" : e.grade)}" href="#event=${encodeURIComponent(e.id)}">
+      <div class="date-col num"><span class="m">${d.getMonth() + 1}월</span><span class="d">${d.getDate()}</span><span class="w">${WEEKDAYS[d.getDay()]}</span></div>
+      <div>
+        <div class="item-title">${cancelled ? `<span class="tag-cancel">취소</span>` : ""}${esc(e.title)}</div>
+        <div class="item-meta">${cancelled ? "" : `<b class="num">${dday(e)}</b> · `}${esc(v.name)}</div>
       </div>
-      <div class="title">${esc(e.title)}</div>
-      <div class="meta">${esc(v.name)} · 선학역 ${v.distance_km}km</div>
-      <div class="meta">하루 <span class="crowd">${crowd(e.crowd_estimate.per_day)}명</span> 예상</div>
+      <div class="item-right"><span class="g">${e.grade}</span><span class="c num">${crowdText(e.crowd_estimate.per_day)}</span></div>
     </a>`;
+}
+
+function legend() {
+  return `<div class="legend">${["S", "A", "B", "C"].map((g) =>
+    `<div style="${gradeVars(g)}"><b>${g}</b><span>${GRADE_TEXT[g]}<br>${GRADE_RANGE[g]}</span></div>`).join("")}</div>`;
+}
+
+function venueList() {
+  const vs = Object.values(VENUES).sort((a, b) => a.distance_km - b.distance_km);
+  return `<div class="list"><ul class="venues">${vs.map((v) =>
+    `<li>${esc(v.name)}<span class="num">${v.distance_km}km</span></li>`).join("")}</ul></div>`;
 }
 
 function renderHome() {
@@ -70,62 +120,88 @@ function renderHome() {
   const big = live.filter((e) => e.grade !== "C");
   const small = live.filter((e) => e.grade === "C");
   const cancelled = list.filter((e) => e.status === "cancelled");
-  const updated = new Date(DATA.updated_at);
+  const status = firstRun() ? "첫 조사를 기다리는 중 · 매일 아침 6:30 조사" : fmtUpdated(new Date(DATA.updated_at));
+
+  if (!big.length) {
+    app.innerHTML = `
+      <p class="status-line">${status}</p>
+      <div class="empty">
+        <h2>${firstRun() ? "곧 첫 조사가 시작돼요" : "다가오는 큰 행사가 없어요"}</h2>
+        <p>콘서트나 큰 행사가 잡히면 바로 알림을 보내드려요. 행사 7일 전과 전날에도 다시 알려드려요.</p>
+      </div>
+      ${small.length ? `<div class="eyebrow">소규모 행사<small>알림 없음</small></div><div class="list">${small.map(listItem).join("")}</div>` : ""}
+      ${cancelled.length ? `<div class="eyebrow">취소된 행사</div><div class="list">${cancelled.map(listItem).join("")}</div>` : ""}
+      <div class="eyebrow">지켜보는 행사장<small>선학역 기준</small></div>
+      ${venueList()}
+      <div class="eyebrow">등급 기준<small>하루 예상 인파</small></div>
+      ${legend()}`;
+    return;
+  }
+
+  const [next, ...rest] = big;
   app.innerHTML = `
-    <p class="muted small">${DATA.events.length || DATA.updated_at.indexOf("T00:00:00") < 0 ? `마지막 조사: ${fmtUpdated(updated)}` : "아직 첫 조사 전이에요"}</p>
-    ${big.length ? `<h2>발주 준비가 필요한 행사</h2>${big.map(card).join("")}`
-                 : `<p class="pad">다가오는 큰 행사가 없어요. 새 행사가 잡히면 알림으로 알려드릴게요.</p>`}
-    ${small.length ? `<h2>소규모 행사 (알림 없음)</h2>${small.map(card).join("")}` : ""}
-    ${cancelled.length ? `<h2>취소된 행사</h2>${cancelled.map(card).join("")}` : ""}
-    <div class="legend">
-      ${["S", "A", "B", "C"].map((g) => `<span style="${gradeVar(g)}">${g} ${GRADE_TEXT[g]}</span>`).join("")}
-    </div>`;
+    <p class="status-line">${status}</p>
+    ${heroCard(next)}
+    ${rest.length ? `<div class="eyebrow">다가오는 행사<small>${rest.length}건</small></div><div class="list">${rest.map(listItem).join("")}</div>` : ""}
+    ${small.length ? `<div class="eyebrow">소규모 행사<small>알림 없음</small></div><div class="list">${small.map(listItem).join("")}</div>` : ""}
+    ${cancelled.length ? `<div class="eyebrow">취소된 행사</div><div class="list">${cancelled.map(listItem).join("")}</div>` : ""}
+    <div class="eyebrow">등급 기준<small>하루 예상 인파</small></div>
+    ${legend()}`;
+}
+
+/* ── 상세 ── */
+function peakRow(text) {
+  const m = text.match(/^(\d{1,2}:\d{2}\s*[-~]\s*\d{1,2}:\d{2})\s*(.*)$/);
+  return m ? `<div class="peak"><b>${esc(m[1])}</b><span>${esc(m[2])}</span></div>`
+           : `<div class="peak"><span>${esc(text)}</span></div>`;
 }
 
 function renderEvent(id) {
   const e = DATA.events.find((x) => x.id === id);
   if (!e) {
-    app.innerHTML = `<a class="back" href="#">← 목록</a><p class="pad">행사를 찾을 수 없어요.</p>`;
+    app.innerHTML = `<a class="back" href="#">← 목록</a><div class="empty"><h2>행사를 찾을 수 없어요</h2><p>지난 행사이거나 정보가 바뀌었을 수 있어요.</p></div>`;
     return;
   }
-  const v = VENUES[e.venue_id] || { name: e.venue_id, distance_km: "?" };
+  const v = venueOf(e);
   const map = `https://map.naver.com/p/search/${encodeURIComponent(v.name)}`;
   const p = e.popularity;
-  const tags = [p.sold_out ? "매진" : "", p.extra_shows ? "추가 회차" : ""].filter(Boolean).join(" · ");
+  const [cv, cu] = crowdParts(e.crowd_estimate.per_day);
+  const cancelled = e.status === "cancelled";
+  const tags = [p.sold_out ? "매진" : "", p.extra_shows ? "추가 회차" : ""].filter(Boolean);
+  const g = cancelled ? "C" : e.grade;
   app.innerHTML = `
     <a class="back" href="#">← 목록</a>
-    <div class="hero">
-      <div class="row">
-        <span class="badge big-badge" style="${gradeVar(e.grade)}">${e.grade} ${GRADE_TEXT[e.grade]}</span>
-        <span class="dday">${e.status === "cancelled" ? "취소됨" : dday(e)}</span>
+    <div class="hero" style="${gradeVars(g)}">
+      <div class="hero-top">
+        <div class="hero-dday num">${cancelled ? "취소" : dday(e)}<small>${period(e)}${e.show_times && e.show_times.length ? "<br>" + e.show_times.join(", ") + " 시작" : ""}</small></div>
+        <span class="grade-chip"><b>${e.grade}</b>${GRADE_TEXT[e.grade]}</span>
       </div>
-      <div class="title">${esc(e.title)}</div>
-      <div class="meta">${period(e)}${e.show_times && e.show_times.length ? " · " + e.show_times.join(", ") + " 시작" : ""}</div>
+      <div class="hero-title">${esc(e.title)}</div>
+      <div class="facts">
+        <div class="fact"><span>하루 예상 인파</span><strong class="num">${cv}<em>${cu}</em></strong></div>
+        <div class="fact"><span>예매 상황</span><strong>${tags.length ? tags.join(" · ") : "판매 중"}</strong></div>
+      </div>
     </div>
 
-    <div class="box">
-      <b>📍 ${esc(v.name)}</b> <span class="muted">선학역 ${v.distance_km}km</span>
+    ${e.order_advice.length ? `<div class="section" style="${gradeVars(g)}"><h3>발주 추천 · 평소 대비</h3>
+      <div class="orders">${e.order_advice.map((a) => `<div class="order"><span>${esc(a.item)}</span><b class="num">×${a.multiplier}</b></div>`).join("")}</div>
+    </div>` : ""}
+
+    ${e.peak_hours.length ? `<div class="section"><h3>손님 몰리는 시간</h3><div class="peaks">${e.peak_hours.map(peakRow).join("")}</div></div>` : ""}
+
+    <div class="section">
+      <h3>장소</h3>
+      <div class="place">${esc(v.name)}<small>선학역에서 약 ${v.distance_km}km</small></div>
       <a class="btn ghost" href="${map}" target="_blank" rel="noopener">네이버 지도에서 보기</a>
     </div>
 
-    <div class="box">
-      <b>👥 하루 약 ${crowd(e.crowd_estimate.per_day)}명 예상</b>
-      ${tags ? `<div class="muted">${tags}</div>` : ""}
-      ${p.evidence.length ? `<ul>${p.evidence.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
-    </div>
+    ${p.evidence.length ? `<div class="section"><h3>인기 근거</h3><ul>${p.evidence.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
 
-    ${e.peak_hours.length ? `<div class="box"><b>⏰ 손님 몰리는 시간</b>
-      <ul>${e.peak_hours.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
-
-    ${e.order_advice.length ? `<div class="box"><b>📦 발주 추천 (평소 대비)</b>
-      <table>${e.order_advice.map((a) => `<tr><td>${esc(a.item)}</td><td class="x">×${a.multiplier}</td></tr>`).join("")}</table>
-    </div>` : ""}
-
-    ${e.sources.length ? `<div class="box small"><b>출처</b>
-      <ul>${e.sources.map((s) => `<li><a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\//, "").slice(0, 48))}</a></li>`).join("")}</ul>
-    </div>` : ""}`;
+    ${e.sources.length ? `<div class="section sources"><h3>출처</h3><ul>${e.sources.map((s) =>
+      `<li><a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\/(www\.)?/, "").slice(0, 42))}</a></li>`).join("")}</ul></div>` : ""}`;
 }
 
+/* ── 설정 ── */
 function urlBase64ToUint8Array(base64) {
   const pad = "=".repeat((4 - (base64.length % 4)) % 4);
   const raw = atob((base64 + pad).replace(/-/g, "+").replace(/_/g, "/"));
@@ -140,18 +216,25 @@ async function renderSettings() {
     const reg = await navigator.serviceWorker.ready;
     sub = await reg.pushManager.getSubscription();
   }
+  const on = !!sub && Notification.permission === "granted";
   app.innerHTML = `
     <a class="back" href="#">← 목록</a>
-    <h2>알림 설정</h2>
-    ${!supported ? `<p>이 브라우저는 알림을 지원하지 않아요. 크롬에서 열고 "홈 화면에 추가"로 설치해 주세요.</p>` : ""}
-    ${supported && !key ? `<p class="muted">관리자 설정(VAPID 공개키)이 아직 없어요.</p>` : ""}
+    <h1 class="page">알림 설정</h1>
+    ${!supported ? `<div class="section"><p>이 브라우저는 알림을 지원하지 않아요. 크롬에서 열고 "홈 화면에 추가"로 설치해 주세요.</p></div>` : ""}
+    ${supported && !key ? `<div class="section"><p class="hint">관리자 설정(VAPID 공개키)이 아직 없어요.</p></div>` : ""}
     ${supported && key ? `
-      <p>${sub ? "✅ 알림이 켜져 있어요." : "알림을 켜면 새 행사·발주 시기를 폰으로 알려드려요."}</p>
-      <button class="btn" id="enable">${sub ? "알림 다시 등록" : "알림 켜기"}</button>
-      <button class="btn ghost" id="local">이 폰에서 알림 모양 미리보기</button>
-      <div id="subbox" ${sub ? "" : "hidden"}>
-        <h2>관리자에게 보낼 등록 코드</h2>
-        <p class="muted small">아래 코드를 복사해서 관리자에게 보내주세요. (한 번만 하면 돼요)</p>
+      <div class="section">
+        <div class="status-card">
+          <div class="status-icon ${on ? "on" : ""}" aria-hidden="true">${on ? "🔔" : "🔕"}</div>
+          <div><strong>${on ? "알림이 켜져 있어요" : "알림이 꺼져 있어요"}</strong>
+          <span>새 행사 · 7일 전 · 전날에 알려드려요</span></div>
+        </div>
+        <button class="btn" id="enable">${on ? "알림 다시 등록" : "알림 켜기"}</button>
+        <button class="btn ghost" id="local">알림 미리보기</button>
+      </div>
+      <div class="section" id="subbox" ${sub ? "" : "hidden"}>
+        <h3>등록 코드</h3>
+        <p class="hint">처음 한 번만 관리자에게 보내주세요.</p>
         <textarea id="subjson" readonly>${sub ? esc(JSON.stringify(sub)) : ""}</textarea>
         <button class="btn ghost" id="copy">코드 복사</button>
       </div>` : ""}`;
@@ -170,7 +253,7 @@ async function renderSettings() {
   if (local) local.onclick = async () => {
     if ((await Notification.requestPermission()) !== "granted") return;
     const reg = await navigator.serviceWorker.ready;
-    reg.showNotification("🆕 [S] 예시 콘서트", { body: "11/14(토) · 인천문학경기장 주경기장 · 하루 4.9만 명 예상", icon: "icon-192.png", data: { url: "./" } });
+    reg.showNotification("🆕 [S] 예시 콘서트", { body: "11/14(토) · 인천문학경기장 주경기장 · 하루 4.9만 명 예상", icon: "icon-192.png", badge: "badge-96.png", data: { url: "./" } });
   };
   const copy = document.getElementById("copy");
   if (copy) copy.onclick = async () => {
@@ -198,7 +281,7 @@ async function load() {
     VENUES = Object.fromEntries(vn.venues.map((v) => [v.id, v]));
     route();
   } catch (err) {
-    app.innerHTML = `<p class="pad">데이터를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</p>`;
+    app.innerHTML = `<div class="empty"><h2>불러오지 못했어요</h2><p>인터넷 연결을 확인하고 다시 열어 주세요.</p></div>`;
   }
 }
 

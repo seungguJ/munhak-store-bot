@@ -1,7 +1,7 @@
 "use strict";
 // 셸은 stale-while-revalidate, data/*.json은 네트워크 우선(오프라인이면 마지막 캐시).
-const CACHE = "seonhak-v1";
-const SHELL = ["./", "index.html", "style.css", "app.js", "config.js", "manifest.json", "icon-192.png", "icon-512.png"];
+const CACHE = "seonhak-v2";
+const SHELL = ["./", "index.html", "style.css", "app.js", "config.js", "manifest.json", "icon-192.png", "icon-512.png", "badge-96.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -50,7 +50,7 @@ self.addEventListener("push", (e) => {
     self.registration.showNotification(msg.title, {
       body: msg.body,
       icon: "icon-192.png",
-      badge: "icon-192.png",
+      badge: "badge-96.png",
       data: { url: msg.url },
     })
   );

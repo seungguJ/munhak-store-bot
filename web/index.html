@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b7a3b">
+  <meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121314" media="(prefers-color-scheme: dark)">
   <title>선학역 행사 알림</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon-192.png">
@@ -12,10 +13,17 @@
 </head>
 <body>
   <header class="top">
-    <a href="#" class="brand">선학역 행사 알림</a>
-    <a href="#settings" class="gear" aria-label="설정">⚙︎</a>
+    <a href="#" class="brand">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span>선학역 행사</span>
+    </a>
+    <a href="#settings" class="icon-btn" aria-label="알림 설정">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-1.7 1.7A1 1 0 0 0 4 19.4h16a1 1 0 0 0 .7-1.7Z"/></svg>
+    </a>
   </header>
-  <main id="app" aria-live="polite"><p class="muted pad">불러오는 중…</p></main>
+  <main id="app" aria-live="polite">
+    <div class="skeleton"></div><div class="skeleton short"></div>
+  </main>
   <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
