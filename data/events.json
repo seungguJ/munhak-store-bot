@@ -1,5 +1,11 @@
 {
-  "updated_at": "2026-10-10T00:00:00+09:00",
+  "updated_at": "2026-10-18T00:52:24+09:00",
   "events": [],
-  "venue_suggestions": []
+  "venue_suggestions": [
+    {
+      "name": "인천남동체육관",
+      "reason": "영탁 'TAK SHOW5' 인천 공연 2026-12-19~20 15:00 (멜론티켓 일반예매 10/16 오픈). 선학역에서 약 3km 안팎으로 목록 밖이라 events에는 넣지 않음",
+      "source": "https://www.topstarnews.net/news/articleView.html?idxno=16248934"
+    }
+  ]
 }
