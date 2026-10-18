@@ -1,6 +1,75 @@
 {
-  "updated_at": "2026-10-18T00:53:36+09:00",
-  "events": [],
+  "updated_at": "2026-10-19T06:32:17+09:00",
+  "events": [
+    {
+      "id": "web-yangbangeon-evolution-2026-incheon",
+      "title": "양방언 \"Evolution\" (10/17 취소분 재공연)",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-11-26",
+      "end": "2026-11-26",
+      "show_times": [
+        "19:30"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천문화예술회관 공지(9/23): 10/17 공연 아티스트 사정으로 취소, 11/26(목) 19:30 대공연장 재공연. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "18:30-19:30 입장",
+        "21:30-22:00 공연 종료 후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/art/ART040101/3088966"
+      ],
+      "first_seen": "2026-10-19",
+      "last_changed": "2026-10-19",
+      "grade": "C"
+    },
+    {
+      "id": "web-incheon-phil-60th-yearend-2026",
+      "title": "인천시립교향악단 창단 60주년 2026 송년음악회 (베토벤 합창)",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-26",
+      "end": "2026-12-26",
+      "show_times": [
+        "17:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "투어코리아(10/6): 12/26(토) 17:00 대공연장, 전석 1만원, 일반예매 10/14 오픈. 매진 여부 미확인"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "16:00-17:00 입장",
+        "19:00-19:30 공연 종료 후 귀가"
+      ],
+      "sources": [
+        "https://www.tournews21.com/news/articleView.html?idxno=145022"
+      ],
+      "first_seen": "2026-10-19",
+      "last_changed": "2026-10-19",
+      "grade": "C"
+    }
+  ],
   "venue_suggestions": [
     {
       "name": "인천남동체육관",
