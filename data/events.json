@@ -1,6 +1,42 @@
 {
-  "updated_at": "2026-10-19T06:32:17+09:00",
+  "updated_at": "2026-10-26T06:31:35+09:00",
   "events": [
+    {
+      "id": "web-fanletter-musical-2026-incheon",
+      "title": "뮤지컬 <팬레터> 인천",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-11-21",
+      "end": "2026-11-22",
+      "show_times": [
+        "14:00",
+        "19:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(10/26 확인): 11/21~22 대공연장 14:00·19:00. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "grade": "C",
+      "peak_hours": [
+        "13:00-14:00 입장",
+        "18:00-19:00 입장",
+        "공연 종료 직후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=5"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
+    },
     {
       "id": "web-yangbangeon-evolution-2026-incheon",
       "title": "양방언 \"Evolution\" (10/17 취소분 재공연)",
@@ -36,6 +72,146 @@
       "grade": "C"
     },
     {
+      "id": "web-lee-eungyeol-30th-2026-incheon",
+      "title": "이은결 30주년 기념 공연",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-04",
+      "end": "2026-12-06",
+      "show_times": [
+        "14:00",
+        "18:30",
+        "19:30"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(10/26 확인): 12/4 19:30, 12/5 14:00·18:30, 12/6 14:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "grade": "C",
+      "peak_hours": [
+        "공연 시작 1시간 전 입장",
+        "공연 종료 직후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=4"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
+    },
+    {
+      "id": "web-hleague-opening-2026-seonhak",
+      "title": "핸드볼 H리그 2026-27 남자부 개막전 (인천도시공사 vs SK호크스)",
+      "category": "sports",
+      "venue_id": "seonhak-gym",
+      "start": "2026-12-06",
+      "end": "2026-12-06",
+      "show_times": [
+        "14:30"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "세계일보(10/20): H리그 12/6 개막, 남자부 개막전 14:30 선학체육관 인천도시공사-SK호크스",
+          "핸드볼 관중 규모가 수용인원 대비 작아 -1"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 2000
+      },
+      "grade_adjust": -1,
+      "grade": "C",
+      "peak_hours": [
+        "13:30-14:30 입장",
+        "16:30 경기 종료 후"
+      ],
+      "sources": [
+        "https://www.segye.com/newsView/20261020510196"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
+    },
+    {
+      "id": "web-byun-jinsub-tour-2026-incheon",
+      "title": "2026 변진섭 전국투어 콘서트 - 인천",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-12",
+      "end": "2026-12-12",
+      "show_times": [
+        "18:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(10/26 확인): 12/12 18:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "grade": "C",
+      "peak_hours": [
+        "17:00-18:00 입장",
+        "20:00-20:30 공연 종료 후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=3"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
+    },
+    {
+      "id": "web-gwanghwamun-yeonga-2026-incheon",
+      "title": "뮤지컬 <광화문연가> 인천",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-19",
+      "end": "2026-12-20",
+      "show_times": [
+        "14:00",
+        "18:30"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(10/26 확인): 12/19~20 대공연장 14:00·18:30 (2일 4회). 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "grade": "C",
+      "peak_hours": [
+        "공연 시작 1시간 전 입장",
+        "공연 종료 직후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=2"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
+    },
+    {
       "id": "web-incheon-phil-60th-yearend-2026",
       "title": "인천시립교향악단 창단 60주년 2026 송년음악회 (베토벤 합창)",
       "category": "concert",
@@ -63,11 +239,78 @@
         "19:00-19:30 공연 종료 후 귀가"
       ],
       "sources": [
-        "https://www.tournews21.com/news/articleView.html?idxno=145022"
+        "https://www.tournews21.com/news/articleView.html?idxno=145022",
+        "https://www.incheon.go.kr/res/RE050101?curPage=1"
       ],
       "first_seen": "2026-10-19",
       "last_changed": "2026-10-19",
       "grade": "C"
+    },
+    {
+      "id": "web-kim-changok-talk-s5-2026-incheon",
+      "title": "2026 김창옥 토크콘서트 시즌5 - 인천",
+      "category": "other",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-27",
+      "end": "2026-12-27",
+      "show_times": [
+        "13:00",
+        "17:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(10/26 확인): 12/27 13:00·17:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "grade": "C",
+      "peak_hours": [
+        "12:00-13:00 입장",
+        "16:00-17:00 입장",
+        "공연 종료 직후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=1"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
+    },
+    {
+      "id": "web-yearend-jeya-festival-2026-incheon",
+      "title": "2026 송년제야 문화축제",
+      "category": "festival",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-31",
+      "end": "2026-12-31",
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(10/26 확인): 12/31 대공연장. 시간·잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "grade": "C",
+      "peak_hours": [
+        "자정 전후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=1"
+      ],
+      "first_seen": "2026-10-26",
+      "last_changed": "2026-10-26"
     }
   ],
   "venue_suggestions": [
