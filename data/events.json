@@ -1,6 +1,75 @@
 {
-  "updated_at": "2026-10-26T06:31:35+09:00",
+  "updated_at": "2026-11-02T06:35:37+09:00",
   "events": [
+    {
+      "id": "web-incheon-mens-choir-58th-2026",
+      "title": "인천남성합창단 창단 55주년 제58회 정기연주회",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-11-05",
+      "end": "2026-11-05",
+      "show_times": [
+        "19:30"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천문화예술회관 공연목록(11/2 확인): 11/5 19:30 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "18:30-19:30 입장",
+        "공연 종료 직후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/art/ART010103/view?resveProgrmSeCode=C&resveGroupSn=5&progrmSn=10915"
+      ],
+      "first_seen": "2026-11-02",
+      "last_changed": "2026-11-02",
+      "grade": "C"
+    },
+    {
+      "id": "web-incheon-dance-93rd-meonnun-2026",
+      "title": "인천시립무용단 제93회 정기공연 <먼 눈>",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-11-13",
+      "end": "2026-11-14",
+      "show_times": [
+        "19:30",
+        "17:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천문화예술회관 공연목록(11/2 확인): 11/13 19:30, 11/14 17:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "공연 시작 1시간 전 입장",
+        "공연 종료 직후 귀가"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/art/ART010103?curPage=2"
+      ],
+      "first_seen": "2026-11-02",
+      "last_changed": "2026-11-02",
+      "grade": "C"
+    },
     {
       "id": "web-fanletter-musical-2026-incheon",
       "title": "뮤지컬 <팬레터> 인천",
@@ -36,6 +105,40 @@
       ],
       "first_seen": "2026-10-26",
       "last_changed": "2026-10-26"
+    },
+    {
+      "id": "web-hyegwang-orchestra-suneung-2026",
+      "title": "고3수험생을 위한 시각장애오케스트라가 전하는 선물",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-11-25",
+      "end": "2026-11-25",
+      "show_times": [
+        "11:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(11/2 확인): 11/25 11:00 대공연장, 운영 인천혜광학교. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "10:00-11:00 입장",
+        "공연 종료 직후"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/art/ART010103/view?resveProgrmSeCode=C&resveGroupSn=5&progrmSn=10926"
+      ],
+      "first_seen": "2026-11-02",
+      "last_changed": "2026-11-02",
+      "grade": "C"
     },
     {
       "id": "web-yangbangeon-evolution-2026-incheon",
