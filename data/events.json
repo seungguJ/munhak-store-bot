@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-02T06:35:37+09:00",
+  "updated_at": "2026-11-09T06:30:14+09:00",
   "events": [
     {
       "id": "web-incheon-mens-choir-58th-2026",
@@ -11,7 +11,7 @@
       "show_times": [
         "19:30"
       ],
-      "status": "scheduled",
+      "status": "done",
       "popularity": {
         "sold_out": false,
         "extra_shows": false,
@@ -175,6 +175,76 @@
       "grade": "C"
     },
     {
+      "id": "web-inssa-family-musical-2026-incheon",
+      "title": "인천 라이브 시트콤 뮤지컬 <인싸가족>",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-11-28",
+      "end": "2026-11-29",
+      "show_times": [
+        "11:00",
+        "14:00",
+        "16:30"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(11/9 확인): 11/28~29 대공연장 11:00·14:00·16:30. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "각 회차 입장 30분~1시간 전",
+        "공연 종료 직후"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=4"
+      ],
+      "first_seen": "2026-11-09",
+      "last_changed": "2026-11-09",
+      "grade": "C"
+    },
+    {
+      "id": "web-great-composers-world-trip-2026-incheon",
+      "title": "위대한 작곡가와 세계여행",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-01",
+      "end": "2026-12-01",
+      "show_times": [
+        "11:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(11/9 확인): 12/1 11:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "10:00-11:00 입장",
+        "공연 종료 직후"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=4"
+      ],
+      "first_seen": "2026-11-09",
+      "last_changed": "2026-11-09",
+      "grade": "C"
+    },
+    {
       "id": "web-lee-eungyeol-30th-2026-incheon",
       "title": "이은결 30주년 기념 공연",
       "category": "concert",
@@ -244,6 +314,74 @@
       ],
       "first_seen": "2026-10-26",
       "last_changed": "2026-10-26"
+    },
+    {
+      "id": "web-dream-harmony-childcenter-2026-incheon",
+      "title": "지역아동센터와 함께하는 꿈의 하모니",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-08",
+      "end": "2026-12-08",
+      "show_times": [
+        "18:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(11/9 확인): 12/8 18:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "17:00-18:00 입장",
+        "공연 종료 직후"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=4"
+      ],
+      "first_seen": "2026-11-09",
+      "last_changed": "2026-11-09",
+      "grade": "C"
+    },
+    {
+      "id": "web-neighbor-love-open-concert-24th-2026-incheon",
+      "title": "제24회 이웃사랑 열린음악회",
+      "category": "concert",
+      "venue_id": "incheon-arts",
+      "start": "2026-12-10",
+      "end": "2026-12-10",
+      "show_times": [
+        "19:00"
+      ],
+      "status": "scheduled",
+      "popularity": {
+        "sold_out": false,
+        "extra_shows": false,
+        "evidence": [
+          "인천시 통합예약 목록(11/9 확인): 12/10 19:00 대공연장. 잔여석 정보 없음"
+        ]
+      },
+      "crowd_estimate": {
+        "fill_rate": 0.5,
+        "per_day": 750
+      },
+      "grade_adjust": 0,
+      "peak_hours": [
+        "18:00-19:00 입장",
+        "공연 종료 직후"
+      ],
+      "sources": [
+        "https://www.incheon.go.kr/res/RE050101?curPage=3"
+      ],
+      "first_seen": "2026-11-09",
+      "last_changed": "2026-11-09",
+      "grade": "C"
     },
     {
       "id": "web-byun-jinsub-tour-2026-incheon",
